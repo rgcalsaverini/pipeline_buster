@@ -9,6 +9,7 @@ module.exports = React.createClass({
     opcodes: React.PropTypes.object,
     registers: React.PropTypes.array,
     limitLines: React.PropTypes.number,
+    locked: React.PropTypes.boolean,
   },
 
   getInitialState: function(){
@@ -69,6 +70,21 @@ module.exports = React.createClass({
         right: '5px',
       },
     };
+
+    var help;
+
+    if(!this.props.locked){
+      help = (
+        <div style={styles.help}>
+          <OpcodeHelp
+            opcodes={this.props.opcodes}
+            registers={this.props.registers}
+            limitLines={this.props.limitLines}
+          />
+        </div>
+      );
+    }
+
     return (
       <div style={styles.container}>
         <span style={styles.title}>
@@ -84,15 +100,10 @@ module.exports = React.createClass({
             registers={this.props.registers}
             height={this.state.height}
             limitLines={this.props.limitLines}
+            locked={this.props.locked}
           />
         </div>
-        <div style={styles.help}>
-          <OpcodeHelp
-            opcodes={this.props.opcodes}
-            registers={this.props.registers}
-            limitLines={this.props.limitLines}
-          />
-        </div>
+        {help}
       </div>
     );
   },

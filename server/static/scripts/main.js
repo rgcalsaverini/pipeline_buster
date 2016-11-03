@@ -1,6 +1,13 @@
 (function(){
   var _init = function() {
-    var codeInputElement = document.getElementById("code-input");
+    var pipeline = [
+      {
+        img: 'block',
+        text: 'Not Pipelined',
+        operations:['ins_fetch', 'decode', 'reg_fetch', 'exec', 'mem', 'write']
+      },
+    ];
+
     var opcodes = {
       MOV: [2, "Move o literal ou registrador contido no operando A para o operando B"],
       PUSH: [1, "Coloca o operando no topo da pilha"],
@@ -17,8 +24,14 @@
       JGE: [1, "Jump condicional maior ou igual a"],
       JL: [1, "Jump condicional menor que"],
       JLE: [1, "Jump condicional menor ou igual a"],
+      HLT: [0, "Interrompe a execucao"]
     }
-    window.components.initCodeInput(codeInputElement, opcodes, ['EAX', 'EBX', 'ECX'], 18);
+
+    var codeInputElement = document.getElementById("code-input");
+    var pannelElement = document.getElementById("pannel");
+
+    window.components.initCodeInput(codeInputElement, opcodes, ['A', 'B', 'C'], 19);
+    window.components.initPannel(pannelElement);
   };
 
   if(document.readyState === 'complete') {

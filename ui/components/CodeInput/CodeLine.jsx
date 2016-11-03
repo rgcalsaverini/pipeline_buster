@@ -70,14 +70,14 @@ module.exports = React.createClass({
         code.push(<span key={0} style={{color: "#D1965A"}}>{codeBits[0]} </span>);
         hasOpcode = true;
       } else {
-        code = (<span key={0} style={{color: "#DD4242"}}>{codeRaw}</span>);
+        code.push(<span key={0} style={{color: "#DD4242"}}>{codeRaw}</span>);
         this._error();
       }
     } else if(this.props.current == -1){
-      code = (<span key={0} style={{color: "#DD4242"}}>{codeRaw}</span>);
+      code.push(<span key={0} style={{color: "#DD4242"}}>{codeRaw}</span>);
       this._error();
     }else {
-      code = this.props.children;
+      code.push(<span key={0}>{this.props.children}</span>);
     }
 
     for(var i = 1 ; hasOpcode && i < codeBits.length ; i++){
@@ -87,6 +87,7 @@ module.exports = React.createClass({
         code.push(<span key={i}><span key={0} style={{color: "#98C379", textDecoration: 'underline'}}>{codeBits[i]}</span><span key={1}> </span></span>);
       } else if(this.props.current == -1) {
         code = (<span key={i} style={{color: "#DD4242"}}>{codeRaw}</span>);
+        break;
       } else {
         code.push(<span key={i}>{codeBits[i]} </span>);
       }

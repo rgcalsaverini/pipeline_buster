@@ -10,6 +10,7 @@ module.exports = React.createClass({
     opcodes: React.PropTypes.object,
     registers: React.PropTypes.array,
     limitLines: React.PropTypes.number,
+    locked: React.PropTypes.boolean,
   },
 
   componentWillMount: function(){
@@ -165,9 +166,10 @@ module.exports = React.createClass({
       );
     }
 
-    return (
-      <div>
-        {this._renderCode()}
+    var textarea;
+
+    if(!this.props.locked){
+      textarea = (
         <textarea
           style={styles.textarea}
           rows={numLines}
@@ -180,6 +182,13 @@ module.exports = React.createClass({
           onKeyDown={this._getCaret}
           onKeyUp={this._getCaret}
         />
+      );
+    }
+
+    return (
+      <div>
+        {this._renderCode()}
+        {textarea}
         {linesLock}
       </div>
     );

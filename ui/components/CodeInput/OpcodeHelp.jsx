@@ -121,8 +121,6 @@ module.exports = React.createClass({
         fontFamily: "'Conv_mini_pixel-7'",
         color: 'rgba(255, 255, 255, .8)',
       },
-
-
     };
 
     var helpWindow;
@@ -133,11 +131,21 @@ module.exports = React.createClass({
             <div style={styles.overlay}/>
             <div style={styles.helpWindow}>
               <div style={styles.helpModal}>
-                <div style={styles.title}>Memoria de programa</div>
-                {this.props.limitLines * 9} bytes ou {this.props.limitLines} linhas
+                <div style={styles.title}>Memoria</div>
+                {this.props.limitLines * 9} bytes ou {this.props.limitLines} linhas de memoria de programa<br/>
+                NaN ou NaN linhas de memoria RAM (stack)
                 <div style={{height: '20px'}}/>
                 <div style={styles.title}>Registradores</div>
-                {this._registers()}
+                Registradores de proposito geral (GPR):<br/>
+                {this._registers()}<br/>
+                Registradores de segmento:<br/>
+                PC - Aponta para o numero da proxima linha de codigo a ser lida<br/>
+                IR - Armazena a instrucao sendo exeutada <br/>
+                SP - Aponta para o topo do stack<br/><br/>
+                EFLAGS:<br/>
+                Z - Flag zero<br/>
+                SN - Flag de sinal<br/>
+
                 <div style={{height: '20px'}}/>
                 <div style={styles.title}>OpCodes</div>
                 {this._opcodes()}
