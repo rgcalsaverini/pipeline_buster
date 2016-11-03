@@ -1,6 +1,6 @@
 var React = require('react');
 var CodeLine = require('./CodeLine.jsx');
-
+var LockIcon = require('../icons/Lock.jsx');
 
 module.exports = React.createClass({
   displayName: 'InputArea',
@@ -8,7 +8,8 @@ module.exports = React.createClass({
   PropTypes: {
     height: React.PropTypes.number,
     opcodes: React.PropTypes.object,
-    registers: React.PropTypes.array
+    registers: React.PropTypes.array,
+    limitLines: React.PropTypes.number,
   },
 
   componentWillMount: function(){
@@ -26,6 +27,7 @@ module.exports = React.createClass({
   _evaluateLines: function(lines){
     var correctedLines = [];
     var numLines = (this.props.height / this._lineHeight)|0;
+    numLines = this.props.limitLines ? Math.min(numLines, this.props.limitLines) : numLines;
 
     for(var i = 0 ; i < lines.length ; i++){
       var line = lines[i];
@@ -114,6 +116,53 @@ module.exports = React.createClass({
         top: '0px',
         width: '100%',
       },
+
+      lineLock: {
+        position: 'absolute',
+        top: String(this._lineHeight * this.props.limitLines) + 'px',
+        width: '100%',
+      },
+
+      lockLineLeft: {
+        position: 'absolute',
+        left: '8px',
+        top: '0px',
+        height: '10px',
+        width: 'calc(50% - 23px)',
+        borderBottom: '2px solid #D1965A',
+      },
+
+      lockLineRight: {
+        position: 'absolute',
+        right: '8px',
+        top: '0px',
+        height: '10px',
+        width: 'calc(50% - 23px)',
+        borderBottom: '2px solid #D1965A',
+      },
+
+      lockIcon: {
+        position: 'absolute',
+        width: '18px',
+        left: 'calc(50% - 9px)',
+        top: '-3px',
+        fill: '#D1965A',
+      },
+
+    }
+
+    console.log(this._lineHeight, this.props.limitLines, String(this.props.lineHeight * this.props.limitLines) + 'px');
+
+    var linesLock;
+
+    if(this.props.limitLines && this.props.limitLines < numLines){
+      linesLock = (
+        <div style={styles.lineLock}>
+          <div style={styles.lockLineLeft}/>
+          <LockIcon style={styles.lockIcon}/>
+          <div style={styles.lockLineRight}/>
+        </div>
+      );
     }
 
     return (
@@ -131,6 +180,7 @@ module.exports = React.createClass({
           onKeyDown={this._getCaret}
           onKeyUp={this._getCaret}
         />
+        {linesLock}
       </div>
     );
   },

@@ -18,7 +18,7 @@
       JL: [1, "Jump condicional menor que"],
       JLE: [1, "Jump condicional menor ou igual a"],
     }
-    window.components.initCodeInput(codeInputElement, opcodes, ['EAX', 'EBX', 'ECX']);
+    window.components.initCodeInput(codeInputElement, opcodes, ['EAX', 'EBX', 'ECX'], 18);
   };
 
   if(document.readyState === 'complete') {

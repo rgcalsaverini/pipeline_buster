@@ -7,7 +7,8 @@ module.exports = React.createClass({
 
   PropTypes: {
     opcodes: React.PropTypes.object,
-    registers: React.PropTypes.array
+    registers: React.PropTypes.array,
+    limitLines: React.PropTypes.number,
   },
 
   getInitialState: function(){
@@ -71,7 +72,7 @@ module.exports = React.createClass({
     return (
       <div style={styles.container}>
         <span style={styles.title}>
-          Codigo fonte:
+          Memoria de programa
         </span>
         <div
           style={styles.outerBox}
@@ -82,12 +83,14 @@ module.exports = React.createClass({
             opcodes={this.props.opcodes}
             registers={this.props.registers}
             height={this.state.height}
+            limitLines={this.props.limitLines}
           />
         </div>
         <div style={styles.help}>
           <OpcodeHelp
             opcodes={this.props.opcodes}
             registers={this.props.registers}
+            limitLines={this.props.limitLines}
           />
         </div>
       </div>

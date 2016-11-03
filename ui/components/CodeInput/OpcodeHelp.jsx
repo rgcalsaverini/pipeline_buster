@@ -7,6 +7,7 @@ module.exports = React.createClass({
   PropTypes: {
     opcodes: React.PropTypes.object,
     registers: React.PropTypes.array,
+    limitLines: React.PropTypes.number,
   },
 
   getInitialState: function(){
@@ -24,14 +25,6 @@ module.exports = React.createClass({
   },
 
   _registers: function(){
-    var style = {
-      color: 'rgba(255, 255, 255, .8)',
-      fontSize: '28px',
-      display: 'inline-block',
-      width: '150px',
-      fontFamily: "'Conv_mini_pixel-7'",
-    };
-
     var registers;
     if(this.props.registers.length == 1){
       registers = this.props.registers[0];
@@ -42,17 +35,14 @@ module.exports = React.createClass({
       registers += ' e ' + this.props.registers[this.props.registers.length-1];
     }
 
-    return <div style={style}>{registers}</div>
+    return <div>{registers}</div>
   },
 
   _opcodes: function(){
     var styles = {
       text: {
-        color: 'rgba(255, 255, 255, .8)',
-        fontSize: '28px',
-        display: 'inline-block',
         width: '150px',
-        fontFamily: "'Conv_mini_pixel-7'",
+        display: 'inline-block',
       },
 
       comment: {
@@ -88,6 +78,12 @@ module.exports = React.createClass({
 
   render: function(){
     var styles = {
+      container: {
+        color: 'rgba(255, 255, 255, .8)',
+        fontSize: '28px',
+        fontFamily: "'Conv_mini_pixel-7'",
+      },
+
       overlay: {
         position: 'fixed',
         backgroundColor: 'rgba(0, 0, 0, .6)',
@@ -105,6 +101,7 @@ module.exports = React.createClass({
         backgroundColor: '#21252B',
         borderRadius: '4px',
         padding: '20px',
+        overflowX: 'auto',
       },
 
       helpWindow:{
@@ -134,23 +131,27 @@ module.exports = React.createClass({
         helpWindow = (
           <span onClick={this._closeWindow}>
             <div style={styles.overlay}/>
-            <span style={styles.helpWindow}>
+            <div style={styles.helpWindow}>
               <div style={styles.helpModal}>
+                <div style={styles.title}>Memoria de programa</div>
+                {this.props.limitLines * 9} bytes ou {this.props.limitLines} linhas
+                <div style={{height: '20px'}}/>
                 <div style={styles.title}>Registradores</div>
                 {this._registers()}
                 <div style={{height: '20px'}}/>
                 <div style={styles.title}>OpCodes</div>
                 {this._opcodes()}
+
               </div>
-            </span>
+            </div>
           </span>
         );
     }
 
     return (
-      <span>
+      <span style={styles.container}>
         <Button onClick={this._openWindow}>
-          OpCodes
+          Info
         </Button>
         {helpWindow}
       </span>
