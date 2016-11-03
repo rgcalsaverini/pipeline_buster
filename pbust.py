@@ -11,11 +11,11 @@ Options:
 """
 
 from docopt import docopt
-from tago.server import application
+from server import application
 
 arguments = docopt(__doc__)
 
 application.run(
     debug=arguments['--dev'],
-    port=arguments['--port']
+    port=arguments['--port'] or 1337
 )

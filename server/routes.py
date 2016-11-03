@@ -1,4 +1,4 @@
-from server import views
+from server import views, app
 
 routes = [
     ('/',                   views.main,           ['GET']),

@@ -1,8 +1,8 @@
 var React = require('react');
 
 module.exports = React.createClass({
-  displayName: 'OpcodeHelp',
-  //
+  displayName: 'Hello',
+  // 
   // PropTypes: {
   //   prop: React.PropTypes.,
   // },
