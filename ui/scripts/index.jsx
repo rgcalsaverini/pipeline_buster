@@ -7,8 +7,12 @@ var ReactComponents = (function () {
     ReactDOM.render(<CodeInput opcodes={opcodes} registers={registers}/>, el);
   };
 
+  // var initOpcodeHelp = function(el) {
+  //   ReactDOM.render(<OpcodeHelp/>, el);
+  // };
+
   return {
-    initCodeInput: initCodeInput
+    initCodeInput: initCodeInput,
   };
 })();
 

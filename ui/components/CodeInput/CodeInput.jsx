@@ -1,6 +1,6 @@
 var React = require('react');
 var InputArea = require('./InputArea.jsx')
-
+var OpcodeHelp = require('./OpcodeHelp.jsx');
 
 module.exports = React.createClass({
   displayName: 'CodeInput',
@@ -55,6 +55,12 @@ module.exports = React.createClass({
         right: '0px',
         backgroundColor: '#282C34',
       },
+
+      help: {
+        position: 'absolute',
+        bottom: '5px',
+        right: '5px',
+      },
     };
     return (
       <div style={styles.container}>
@@ -70,6 +76,12 @@ module.exports = React.createClass({
             opcodes={this.props.opcodes}
             registers={this.props.registers}
             height={this.state.height}
+          />
+        </div>
+        <div style={styles.help}>
+          <OpcodeHelp
+            opcodes={this.props.opcodes}
+            registers={this.props.registers}
           />
         </div>
       </div>

@@ -23,6 +23,7 @@ module.exports = React.createClass({
 
   _evaluateLines: function(lines){
     var correctedLines = [];
+    var numLines = (this.props.height / this._lineHeight)|0;
 
     for(var i = 0 ; i < lines.length ; i++){
       var line = lines[i];
@@ -37,7 +38,7 @@ module.exports = React.createClass({
     if(lines[lines.length-1] == '')
       correctedLines.push('');
 
-    return correctedLines;
+    return correctedLines.slice(0, numLines);
   },
 
   _handleChange: function(event){
@@ -84,12 +85,12 @@ module.exports = React.createClass({
     var styles = {
       textarea:{
         lineHeight: String(this._lineHeight) + 'px',
-        // backgroundColor: 'rgba(0,0,0,0)',
         outline: 'none',
         border: 'none',
         opacity: '.0',
         position: 'absolute',
         top: '0px',
+        width: '100%',
       },
     }
 

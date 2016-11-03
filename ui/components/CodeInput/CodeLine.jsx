@@ -39,7 +39,7 @@ module.exports = React.createClass({
         display: 'inline-block',
         position: 'absolute',
         marginTop: '-' + lineHeight,
-        left: '35px',
+        left: this.props.line ? '35px' : '0px',
         color: 'rgba(255, 255, 255, .8)',
       },
 
@@ -62,7 +62,7 @@ module.exports = React.createClass({
     var hasOpcode = false;
 
     if(Object.keys(this.props.opcodes).indexOf(codeBits[0]) > -1){
-      if(codeBits.length-1 <= this.props.opcodes[codeBits[0]]){
+      if(codeBits.length-1 <= this.props.opcodes[codeBits[0]][0]){
         code.push(<span style={{color: "#D1965A"}}>{codeBits[0]} </span>);
         hasOpcode = true;
       } else {
@@ -88,9 +88,15 @@ module.exports = React.createClass({
       }
     }
 
+    var line;
+
+    if(this.props.line){
+      line = (<div style={styles.lineNumber}>{this.props.line}</div>);
+    }
+
     return (
       <div style={styles.container}>
-        <div style={styles.lineNumber}>{this.props.line}</div>
+        {line}
         <div style={styles.code}>{code}</div>
       </div>
     );
