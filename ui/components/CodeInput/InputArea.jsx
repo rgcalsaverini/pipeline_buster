@@ -128,6 +128,7 @@ module.exports = React.createClass({
           onFocus={this._handleFocus}
           onBlur={this._handleBlur}
           onClick={this._getCaret}
+          onKeyDown={this._getCaret}
           onKeyUp={this._getCaret}
         />
       </div>

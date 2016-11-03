@@ -15,6 +15,12 @@ module.exports = React.createClass({
     };
   },
 
+  componentWillMount: function(){
+    window.onresize = function(event) {
+      this._getOuterBoxRef(this._outerBoxRef)
+    }.bind(this);
+  },
+
   _getOuterBoxRef: function(ref) {
     if(!ref){
       throw 'Game Error: Failed to get reference of code area.';
