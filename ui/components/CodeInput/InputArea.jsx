@@ -42,7 +42,16 @@ module.exports = React.createClass({
 
   _handleChange: function(event){
     var lines = this._evaluateLines(event.target.value.split(/\n|\r/));
-    this.setState({code: lines.join('\n')})
+    this.setState({code: lines.join('\n')}, this._caretToEnd);
+
+  },
+
+  _caretToEnd: function(){
+    this._inputRef.selectionStart = this._inputRef.selectionEnd = this.state.code.length+1;
+  },
+
+  _getRef: function(ref) {
+    this._inputRef = ref;
   },
 
   _renderCode: function(){
@@ -92,6 +101,10 @@ module.exports = React.createClass({
           rows={numLines}
           onChange={this._handleChange}
           value={this.state.code}
+          ref={this._getRef}
+          onFocus={this._caretToEnd}
+          onClick={this._caretToEnd}
+          onKeyDown={this._caretToEnd}
         />
       </div>
     );
