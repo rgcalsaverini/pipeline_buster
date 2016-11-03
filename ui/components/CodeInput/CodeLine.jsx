@@ -57,20 +57,24 @@ module.exports = React.createClass({
       },
     }
 
+    var codeRaw = this.props.children.trim();
+    console.log(codeRaw[codeRaw.length-1], codeRaw[codeRaw.length-1] == ':');
     var code = [];
-    var codeBits = this.props.children.split(' ');
+    var codeBits = codeRaw.split(' ');
     var hasOpcode = false;
 
-    if(Object.keys(this.props.opcodes).indexOf(codeBits[0]) > -1){
+    /*if(codeRaw[codeRaw.length-1] == ':') {
+      code = (<span style={{color: "#E2C08D"}}>{codeRaw}</span>);
+    } else*/ if(Object.keys(this.props.opcodes).indexOf(codeBits[0]) > -1){
       if(codeBits.length-1 <= this.props.opcodes[codeBits[0]][0]){
         code.push(<span style={{color: "#D1965A"}}>{codeBits[0]} </span>);
         hasOpcode = true;
       } else {
-        code = (<span style={{color: "#DD4242"}}>{codeBits.join(' ')}</span>);
+        code = (<span style={{color: "#DD4242"}}>{codeRaw}</span>);
         this._error();
       }
     } else if(!this.props.current){
-      code = (<span style={{color: "#DD4242"}}>{codeBits.join(' ')}</span>);
+      code = (<span style={{color: "#DD4242"}}>{codeRaw}</span>);
       this._error();
     }else {
       code = this.props.children;
@@ -82,7 +86,7 @@ module.exports = React.createClass({
       } else if(this.props.registers.indexOf(codeBits[i]) > -1) {
         code.push(<span style={{color: "#98C379"}}>{codeBits[i]} </span>);
       } else if(!this.props.current) {
-        code = (<span style={{color: "#DD4242"}}>{codeBits.join(' ')}</span>);
+        code = (<span style={{color: "#DD4242"}}>{codeRaw}</span>);
       } else {
         code.push(<span>{codeBits[i]} </span>);
       }

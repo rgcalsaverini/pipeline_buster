@@ -138,6 +138,7 @@ module.exports = React.createClass({
               <div style={styles.helpModal}>
                 <div style={styles.title}>Registradores</div>
                 {this._registers()}
+                <div style={{height: '20px'}}/>
                 <div style={styles.title}>OpCodes</div>
                 {this._opcodes()}
               </div>
