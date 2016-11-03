@@ -18,6 +18,8 @@ module.exports = React.createClass({
   getInitialState: function(){
     return {
       code: '',
+      focus: false,
+      caret: 0,
     };
   },
 
@@ -43,12 +45,26 @@ module.exports = React.createClass({
 
   _handleChange: function(event){
     var lines = this._evaluateLines(event.target.value.split(/\n|\r/));
-    this.setState({code: lines.join('\n')}, this._caretToEnd);
+    this.setState({code: lines.join('\n')}/*, this._caretToEnd*/);
+  },
 
+  _handleFocus: function(){
+    this._getCaret();
+    this.setState({focus: true});
+  },
+
+  _handleBlur: function(){
+    this.setState({focus: false});
   },
 
   _caretToEnd: function(){
     this._inputRef.selectionStart = this._inputRef.selectionEnd = this.state.code.length+1;
+  },
+
+  _getCaret: function(){
+    this.setState({caret: this._inputRef.selectionStart}, function(){
+      this._inputRef.selectionEnd = this._inputRef.selectionStart = this.state.caret;
+    }.bind(this))
   },
 
   _getRef: function(ref) {
@@ -58,7 +74,9 @@ module.exports = React.createClass({
   _renderCode: function(){
     var code = this.state.code.split(/\n|\r/);
     var output = [];
+    var caret = this.state.caret;
     for(var i = 0 ; i < code.length ; i++){
+      var isCurrent = (caret >= 0 && caret <= code[i].length) || (i == code.length-1 && caret >= 0);
       output.push(
         <CodeLine
           opcodes={this.props.opcodes}
@@ -66,11 +84,12 @@ module.exports = React.createClass({
           key={i}
           line={i+1}
           lineHeight={this._lineHeight}
-          current={i == code.length-1}
+          current={isCurrent && this.state.focus? caret : -1}
         >
           {code[i]}
         </CodeLine>
       );
+      caret = caret - (code[i].length + 1);
     }
     return output;
   },
@@ -85,9 +104,12 @@ module.exports = React.createClass({
     var styles = {
       textarea:{
         lineHeight: String(this._lineHeight) + 'px',
+        fontFamily: "'Conv_ponde___'",
+        fontSize: '20px',
         outline: 'none',
         border: 'none',
         opacity: '.0',
+        paddingLeft: '35px',
         position: 'absolute',
         top: '0px',
         width: '100%',
@@ -103,11 +125,16 @@ module.exports = React.createClass({
           onChange={this._handleChange}
           value={this.state.code}
           ref={this._getRef}
-          onFocus={this._caretToEnd}
-          onClick={this._caretToEnd}
-          onKeyDown={this._caretToEnd}
+          onFocus={this._handleFocus}
+          onBlur={this._handleBlur}
+          onClick={this._getCaret}
+          onKeyUp={this._getCaret}
         />
       </div>
     );
   },
 });
+
+// onFocus={this._caretToEnd}
+// onClick={this._caretToEnd}
+// onKeyDown={this._caretToEnd}

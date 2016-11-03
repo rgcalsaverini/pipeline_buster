@@ -1,4 +1,5 @@
 var React = require('react');
+var Caret = require('./Caret.jsx');
 
 module.exports = React.createClass({
   displayName: 'CodeLine',
@@ -8,7 +9,7 @@ module.exports = React.createClass({
     lineHeight: React.PropTypes.number,
     opcodes: React.PropTypes.object,
     registers: React.PropTypes.array,
-    current: React.PropTypes.boolean,
+    current: React.PropTypes.number,
     onError: React.PropTypes.func,
   },
 
@@ -27,12 +28,12 @@ module.exports = React.createClass({
     var lineHeight = String(this.props.lineHeight) + 'px';
     var styles = {
       container: {
-        backgroundColor: this.props.current ? 'rgba(255, 255, 255, .08)' : 'rgba(0,0,0,0)',
+        backgroundColor: this.props.current > -1 ? 'rgba(255, 255, 255, .08)' : 'rgba(0,0,0,0)',
       },
 
       code: {
-        fontFamily: "'Conv_mini_pixel-7'",
-        fontSize: '28px',
+        fontFamily: "'Conv_ponde___'",
+        fontSize: '20px',
         lineHeight: lineHeight,
         height: lineHeight,
         backgroundColor: 'rgba(0, 255, 0, 0.01)',
@@ -44,8 +45,8 @@ module.exports = React.createClass({
       },
 
       lineNumber: {
-        fontFamily: "'Conv_mini_pixel-7'",
-        fontSize: '20px',
+        fontFamily: "'Conv_ponde___'",
+        fontSize: '15px',
         lineHeight: lineHeight,
         height: lineHeight,
         paddingLeft: '5px',
@@ -58,7 +59,6 @@ module.exports = React.createClass({
     }
 
     var codeRaw = this.props.children.trim();
-    console.log(codeRaw[codeRaw.length-1], codeRaw[codeRaw.length-1] == ':');
     var code = [];
     var codeBits = codeRaw.split(' ');
     var hasOpcode = false;
@@ -67,14 +67,14 @@ module.exports = React.createClass({
       code = (<span style={{color: "#E2C08D"}}>{codeRaw}</span>);
     } else*/ if(Object.keys(this.props.opcodes).indexOf(codeBits[0]) > -1){
       if(codeBits.length-1 <= this.props.opcodes[codeBits[0]][0]){
-        code.push(<span style={{color: "#D1965A"}}>{codeBits[0]} </span>);
+        code.push(<span key={0} style={{color: "#D1965A"}}>{codeBits[0]} </span>);
         hasOpcode = true;
       } else {
-        code = (<span style={{color: "#DD4242"}}>{codeRaw}</span>);
+        code = (<span key={0} style={{color: "#DD4242"}}>{codeRaw}</span>);
         this._error();
       }
-    } else if(!this.props.current){
-      code = (<span style={{color: "#DD4242"}}>{codeRaw}</span>);
+    } else if(this.props.current == -1){
+      code = (<span key={0} style={{color: "#DD4242"}}>{codeRaw}</span>);
       this._error();
     }else {
       code = this.props.children;
@@ -82,26 +82,33 @@ module.exports = React.createClass({
 
     for(var i = 1 ; hasOpcode && i < codeBits.length ; i++){
       if(!isNaN(Number(codeBits[i].trim()))) {
-        code.push(<span style={{color: "#56B6C2"}}>{codeBits[i]} </span>);
+        code.push(<span key={i} style={{color: "#56B6C2"}}>{codeBits[i]} </span>);
       } else if(this.props.registers.indexOf(codeBits[i]) > -1) {
-        code.push(<span style={{color: "#98C379"}}>{codeBits[i]} </span>);
-      } else if(!this.props.current) {
-        code = (<span style={{color: "#DD4242"}}>{codeRaw}</span>);
+        code.push(<span key={i}><span key={0} style={{color: "#98C379", textDecoration: 'underline'}}>{codeBits[i]}</span><span key={1}> </span></span>);
+      } else if(this.props.current == -1) {
+        code = (<span key={i} style={{color: "#DD4242"}}>{codeRaw}</span>);
       } else {
-        code.push(<span>{codeBits[i]} </span>);
+        code.push(<span key={i}>{codeBits[i]} </span>);
       }
     }
 
     var line;
 
     if(this.props.line){
-      line = (<div style={styles.lineNumber}>{this.props.line}</div>);
+      line = (<div key={0} style={styles.lineNumber}>{this.props.line}</div>);
+    }
+
+    var caret;
+
+    if(this.props.current > -1){
+      caret = (<Caret key={2} lineHeight={this.props.lineHeight} char={this.props.current}/>);
     }
 
     return (
       <div style={styles.container}>
         {line}
-        <div style={styles.code}>{code}</div>
+        <div key={1} style={styles.code}>{code}</div>
+        {caret}
       </div>
     );
   },
