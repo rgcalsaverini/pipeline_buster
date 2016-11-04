@@ -10,6 +10,7 @@ module.exports = React.createClass({
     registers: React.PropTypes.array,
     limitLines: React.PropTypes.number,
     locked: React.PropTypes.boolean,
+    onChange: React.PropTypes.func,
   },
 
   getInitialState: function(){
@@ -36,6 +37,12 @@ module.exports = React.createClass({
     }
 
     this.setState({height: height});
+  },
+
+  _handleChange: function(value){
+    if(this.props.onChange){
+      this.props.onChange(value);
+    }
   },
 
   render: function(){
@@ -101,6 +108,7 @@ module.exports = React.createClass({
             height={this.state.height}
             limitLines={this.props.limitLines}
             locked={this.props.locked}
+            onChange={this._handleChange}
           />
         </div>
         {help}

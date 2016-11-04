@@ -1,7 +1,7 @@
 var React = require('react');
 
 module.exports = React.createClass({
-  displayName: 'OpcodeHelp',
+  displayName: 'Template',
   //
   // PropTypes: {
   //   prop: React.PropTypes.,

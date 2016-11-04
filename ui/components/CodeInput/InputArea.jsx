@@ -1,6 +1,6 @@
 var React = require('react');
 var CodeLine = require('./CodeLine.jsx');
-var LockIcon = require('../icons/Lock.jsx');
+var LockIcon = require('../Icons').Lock;
 
 module.exports = React.createClass({
   displayName: 'InputArea',
@@ -11,6 +11,7 @@ module.exports = React.createClass({
     registers: React.PropTypes.array,
     limitLines: React.PropTypes.number,
     locked: React.PropTypes.boolean,
+    onChange: React.PropTypes.func,
   },
 
   componentWillMount: function(){
@@ -48,7 +49,8 @@ module.exports = React.createClass({
 
   _handleChange: function(event){
     var lines = this._evaluateLines(event.target.value.split(/\n|\r/));
-    this.setState({code: lines.join('\n')}/*, this._caretToEnd*/);
+    this.props.onChange(lines);
+    this.setState({code: lines.join('\n')});
   },
 
   _handleFocus: function(){

@@ -1,6 +1,9 @@
 var React = require('react');
 var Header = require('./Header.jsx');
 var Stack = require('./Stack');
+var Registers = require('./Registers.jsx');
+var Menu = require('./Menu.jsx');
+var Message = require('./Message.jsx');
 
 
 module.exports = React.createClass({
@@ -61,9 +64,27 @@ module.exports = React.createClass({
       stack:{
         // backgroundColor: 'rgba(255, 0, 0, .1)',
         position: 'absolute',
-        width: '35%',
+        width: 'calc(40% - 30px)',
         bottom: '50px',
         top: '50px',
+      },
+
+      registers: {
+        // backgroundColor: 'rgba(255, 0, 255, .1)',
+        position: 'absolute',
+        width: 'calc(60% - 30px)',
+        bottom: '50px',
+        top: '50px',
+        left: 'calc(40% - 30px)',
+      },
+
+      menu: {
+        // backgroundColor: 'rgba(0, 0, 255, .1)',
+        position: 'absolute',
+        width: '60px',
+        bottom: '50px',
+        top: '50px',
+        right: '0px',
       },
 
       message: {
@@ -73,24 +94,6 @@ module.exports = React.createClass({
         height: '50px',
         bottom: '0px',
         borderTop: '2px solid rgba(255, 255, 255, .2)',
-      },
-
-      menu: {
-        // backgroundColor: 'rgba(0, 0, 255, .1)',
-        position: 'absolute',
-        width: '15%',
-        bottom: '50px',
-        top: '50px',
-        right: '0px',
-      },
-
-      registers: {
-        // backgroundColor: 'rgba(255, 0, 255, .1)',
-        position: 'absolute',
-        width: '50%',
-        bottom: '50px',
-        top: '50px',
-        left: '35%',
       },
     };
 
@@ -109,12 +112,17 @@ module.exports = React.createClass({
         </div>
 
         <div style={styles.registers}>
+          <Registers registers={machineData.registers}/>
         </div>
 
         <div style={styles.menu}>
+          <Menu/>
         </div>
 
         <div style={styles.message}>
+          <Message error={machineData.messageError}>
+            {machineData.message}
+          </Message>
         </div>
       </div>
     );

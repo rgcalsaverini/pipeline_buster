@@ -12,14 +12,16 @@ machines = {
         'stack': {
             'limit': 12,
             'contents': [],
-            # 'contents': [1],
         },
         'gprs': ['A', 'B', 'C'],
         'registers': {},
-        'pipeline': {
-            'img': 'block',
-            'text': 'Not Pipelined',
-            'operations': ['ins_fetch', 'decode', 'reg_fetch', 'exec', 'mem', 'write'],
-        },
+        'returnRegister': 'A',
+        'pipeline': [
+            {
+                'img': 'block',
+                'text': 'Not Pipelined',
+                'operations': ['ins_fetch', 'decode', 'reg_fetch', 'exec', 'mem', 'write'],
+            },
+        ],
     }
 }

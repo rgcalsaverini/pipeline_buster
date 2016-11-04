@@ -1,10 +1,15 @@
 var React = require('react');
+var merge = require('../../utils/merge.js');
+
+
 
 module.exports = React.createClass({
   displayName: 'Button',
 
   PropTypes: {
     onClick: React.PropTypes.func,
+    rounded: React.PropTypes.boolean,
+    style: React.PropTypes.object,
   },
 
   getInitialState: function(){
@@ -31,7 +36,7 @@ module.exports = React.createClass({
     var styles = {
       container: {
         padding: '8px',
-        borderRadius: '6px',
+        borderRadius: this.props.rounded ? '100%' : '6px',
         transition: 'all ease-in-out .2s',
         backgroundColor: this.state.hover ? 'rgba(255,255,255,.1)' : 'rgba(0,0,0,0)',
         fontFamily: "'Conv_mini_pixel-7'",
@@ -46,7 +51,7 @@ module.exports = React.createClass({
         onMouseEnter={this._handleMouseEnter}
         onMouseLeave={this._handleMouseLeave}
         onClick={this._handleClick}
-        style={styles.container}
+        style={merge(styles.container, this.props.style)}
       >
         <span>{this.props.children}</span>
       </div>

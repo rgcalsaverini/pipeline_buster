@@ -32,9 +32,11 @@ module.exports = React.createClass({
     var topPadding = String(Math.max(0, this.props.height - numCells * 39 - 35)) + 'px';
     var cells = [<span style={{paddingTop: topPadding}}/>];
 
-    console.log(this.props.height, numCells, limit);
+    for(var i = numCells-1; i >= 0; i--){
+      if(numCells > limit && numCells - i > limit){
+        break;
+      }
 
-    for(var i = Math.min(numCells-1, limit) ; i >= 0 ; i--){
       var content = this.props.contents[i];
       cells.push(
         <Cell key={i} first={i==0 && limit >= numCells}>
