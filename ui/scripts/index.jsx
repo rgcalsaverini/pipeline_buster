@@ -13,7 +13,7 @@ var ReactComponents = (function () {
   var _pannel_el;
   var _stopCallback;
 
-  var _initCodeInput = function(el, opcodes, registers, limitLines, locked) {
+  var _initCodeInput = function(el, opcodes, registers, limitLines, locked, highlight, error) {
     ReactDOM.render(
       <CodeInput
         opcodes={opcodes}
@@ -21,6 +21,8 @@ var ReactComponents = (function () {
         limitLines={limitLines}
         onChange={_handleCodeChange}
         locked={locked}
+        highlightLine={highlight}
+        highlightError={error}
       />,
         el
       );
@@ -35,8 +37,9 @@ var ReactComponents = (function () {
   };
 
   var _machineStoped = function(){
-    _initCodeInput(_input_el, _machine.opcodes, _machine.gprs, _machine.code.limit);
     _stopCallback();
+    _initCodeInput(_input_el, _machine.opcodes, _machine.gprs, _machine.code.limit);
+    _initPannel(_pannel_el, _machine);
   };
 
   var loadMachine = function(machine_id, input_el, pannel_el){
@@ -67,6 +70,8 @@ var ReactComponents = (function () {
         _machine.registers = args[1];
         _machine.stack.contents = args[2];
         _initPannel(_pannel_el, _machine);
+        _initCodeInput(_input_el, _machine.opcodes, _machine.gprs,
+          _machine.code.limit, true, _machine.registers.PC, _machine.messageError)
       }
 
       else if(type == 'info'){
@@ -82,13 +87,16 @@ var ReactComponents = (function () {
     _machine.messageError = false;
     MachineSim.run(_code, messageMachine, _machineStoped);
     _initPannel(_pannel_el, _machine);
-    _initCodeInput(_input_el, _machine.opcodes, _machine.gprs, _machine.code.limit, true);
+    _initCodeInput(_input_el, _machine.opcodes, _machine.gprs, _machine.code.limit, true, 0, false);
     startCallback();
   };
 
   var stopMachine = function(){
-    MachineSim.stop();
-    _stopCallback();
+     MachineSim.stop();
+    _machine.message = 'Execucao interrompida pelo usuario';
+    _machine.messageError = false;
+    _machine.status = 'desligado'
+    _machineStoped();
   };
 
   return {

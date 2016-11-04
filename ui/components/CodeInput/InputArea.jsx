@@ -12,6 +12,8 @@ module.exports = React.createClass({
     limitLines: React.PropTypes.number,
     locked: React.PropTypes.boolean,
     onChange: React.PropTypes.func,
+    highlightLine: React.PropTypes.number,
+    highlightError: React.PropTypes.boolean,
   },
 
   componentWillMount: function(){
@@ -77,9 +79,10 @@ module.exports = React.createClass({
   },
 
   _renderCode: function(){
+    var highlightLine = this.props.highlightLine;
     var code = this.state.code.split(/\n|\r/);
     var output = [];
-    var caret = this.state.caret;
+    var caret =  typeof highlightLine != 'undefined' ? 0 : this.state.caret;
     for(var i = 0 ; i < code.length ; i++){
       var isCurrent = (caret >= 0 && caret <= code[i].length) || (i == code.length-1 && caret >= 0);
       output.push(
@@ -89,12 +92,16 @@ module.exports = React.createClass({
           key={i}
           line={i+1}
           lineHeight={this._lineHeight}
-          current={isCurrent && this.state.focus? caret : -1}
+          current={(isCurrent && this.state.focus) || highlightLine == i ? caret : null}
+          error={typeof highlightLine != 'undefined' && this.props.highlightError}
+          hideCaret={typeof highlightLine != 'undefined'}
         >
           {code[i]}
         </CodeLine>
       );
-      caret = caret - (code[i].length + 1);
+
+      if(typeof highlightLine == 'undefined')
+        caret = caret - (code[i].length + 1);
     }
     return output;
   },

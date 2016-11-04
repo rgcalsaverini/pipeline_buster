@@ -26,7 +26,9 @@ opcodes = {
     'JGE':  [1, "Jump condicional maior ou igual a"],
     'JL':   [1, "Jump condicional menor que"],
     'JLE':  [1, "Jump condicional menor ou igual a"],
-    'HLT':  [0, "Interrompe a execucao"]
+    'HLT':  [0, "Interrompe a execucao"],
+    'NOP':  [0, "Nao-operacao, apenas ocupa um ciclo"],
+
 }
 
-basic = {a: opcodes[a] for a in ['MOV', 'PUSH', 'POP', 'JZ', 'JNZ', 'JMP', 'OR', 'XOR', 'AND', 'NOT', 'ADD', 'SUB']}
+basic = {a: opcodes[a] for a in ['NOP', 'MOV', 'PUSH', 'POP', 'JZ', 'JNZ', 'JMP', 'OR', 'XOR', 'AND', 'NOT', 'ADD', 'SUB']}

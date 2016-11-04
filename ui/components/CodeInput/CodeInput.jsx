@@ -11,6 +11,8 @@ module.exports = React.createClass({
     limitLines: React.PropTypes.number,
     locked: React.PropTypes.boolean,
     onChange: React.PropTypes.func,
+    highlightLine: React.PropTypes.number,
+    highlightError: React.PropTypes.boolean,
   },
 
   getInitialState: function(){
@@ -108,6 +110,8 @@ module.exports = React.createClass({
             height={this.state.height}
             limitLines={this.props.limitLines}
             locked={this.props.locked}
+            highlightLine={this.props.highlightLine}
+            highlightError={this.props.highlightError}
             onChange={this._handleChange}
           />
         </div>

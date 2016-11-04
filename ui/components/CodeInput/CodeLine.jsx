@@ -10,7 +10,8 @@ module.exports = React.createClass({
     opcodes: React.PropTypes.object,
     registers: React.PropTypes.array,
     current: React.PropTypes.number,
-    onError: React.PropTypes.func,
+    error: React.PropTypes.boolean,
+    hideCaret: React.PropTypes.boolean,
   },
 
   // getInitialState: function(){
@@ -18,17 +19,12 @@ module.exports = React.createClass({
   //   };
   // },
 
-  _error: function(){
-    if(this.props.onError){
-      this.props.onError(this.props.line-1);
-    }
-  },
-
   render: function(){
     var lineHeight = String(this.props.lineHeight) + 'px';
+    var currentColor = this.props.error ? 'rgba(221, 79, 79, 0.3)': 'rgba(255, 255, 255, .08)';
     var styles = {
       container: {
-        backgroundColor: this.props.current > -1 ? 'rgba(255, 255, 255, .08)' : 'rgba(0,0,0,0)',
+        backgroundColor: this.props.current != null ? currentColor : 'rgba(0,0,0,0)',
       },
 
       code: {
@@ -71,11 +67,9 @@ module.exports = React.createClass({
         hasOpcode = true;
       } else {
         code.push(<span key={0} style={{color: "#DD4242"}}>{codeRaw}</span>);
-        this._error();
       }
-    } else if(this.props.current == -1){
+    } else if(this.props.current == null){
       code.push(<span key={0} style={{color: "#DD4242"}}>{codeRaw}</span>);
-      this._error();
     }else {
       code.push(<span key={0}>{this.props.children}</span>);
     }
@@ -85,7 +79,7 @@ module.exports = React.createClass({
         code.push(<span key={i} style={{color: "#56B6C2"}}>{codeBits[i]} </span>);
       } else if(this.props.registers.indexOf(codeBits[i]) > -1) {
         code.push(<span key={i}><span key={0} style={{color: "#98C379", textDecoration: 'underline'}}>{codeBits[i]}</span><span key={1}> </span></span>);
-      } else if(this.props.current == -1) {
+      } else if(this.props.current == null) {
         code = (<span key={i} style={{color: "#DD4242"}}>{codeRaw}</span>);
         break;
       } else {
@@ -101,7 +95,7 @@ module.exports = React.createClass({
 
     var caret;
 
-    if(this.props.current > -1){
+    if(this.props.current != null && !this.props.hideCaret){
       caret = (<Caret key={2} lineHeight={this.props.lineHeight} char={this.props.current}/>);
     }
 
