@@ -2,6 +2,8 @@ from server import views, app
 
 routes = [
     ('/',                   views.main,           ['GET']),
+    # ('/machine',            views.list_machines,  ['GET']),
+    ('/machine/<int:id>',   views.machine,  ['GET']),
 ]
 
 def add_routes():

@@ -1,0 +1,32 @@
+opcodes = {
+    'MOV':  [2, "Move o literal ou registrador contido no operando A para o operando B"],
+    'PUSH': [1, "Coloca o operando no topo da pilha"],
+    'POP':  [1, "Remove um elemento do topo da pilha para o operando"],
+    'ADD':  [2, "Soma os operandos A e B e armazena o resultado no operando A"],
+    'SUB':  [2, "Subtrai os operandos A e B e armazena o resultado no operando A"],
+    'INC':  [1, "Incrementa o operando A por 1"],
+    'DEC':  [1, "Decrementa o operando A por 1"],
+    'IMUL': [2, "Multiplica o operando A por B e armazena em A"],
+    'IDIV': [2, "Divide o operando A por B armazenando o quoeficiente em A e o resto em B"],
+    'AND': [2, "E logico"],
+    'OR': [2, "Ou Logio"],
+    'XOR': [2, "Ou exclusivo logico"],
+    'NOT': [1, "Realiza o complemento de dois do operador"],
+    'SHL': [2, "Shift A para a esquerda B bits"],
+    'SHR': [2, "Shift A para a direita B bits"],
+    'CALL': [1, "Implementa uma subrotina"],
+    'RET': [0, "Implementa o mecanismo de retorno de uma subrotina"],
+    'JMP':  [1, "Jump incondicional para a linha A"],
+    'CMP':  [2, "Compara os valores dos dois operandos definindo os condition codes da maquina"],
+    'JE':   [1, "Jump condicional igual a"],
+    'JNE':  [1, "Jump condicional diferente de"],
+    'JZ':   [1, "Jump condicional de valor nulo"],
+    'JNZ':   [1, "Jump condicional de valor nao nulo"],
+    'JG':   [1, "Jump condicional maior que"],
+    'JGE':  [1, "Jump condicional maior ou igual a"],
+    'JL':   [1, "Jump condicional menor que"],
+    'JLE':  [1, "Jump condicional menor ou igual a"],
+    'HLT':  [0, "Interrompe a execucao"]
+}
+
+basic = {a: opcodes[a] for a in ['MOV', 'PUSH', 'POP', 'JZ', 'JNZ', 'JMP', 'OR', 'XOR', 'AND', 'NOT', 'ADD', 'SUB']}
