@@ -28,7 +28,8 @@ opcodes = {
     'JL':   [1, "Jump condicional menor que"],
     'JLE':  [1, "Jump condicional menor ou igual a"],
     'HLT':  [0, "Interrompe a execucao"],
+    'PRS':  [0,"Imprime o conteudo do stack para STDOUT"],
 
 }
 
-basic = {a: opcodes[a] for a in ['NOP', 'MOV', 'PUSH', 'POP', 'JZ', 'JNZ', 'JMP', 'OR', 'XOR', 'AND', 'NOT', 'ADD', 'SUB']}
+basic = {a: opcodes[a] for a in ['NOP', 'MOV', 'PUSH', 'POP', 'JZ', 'JNZ', 'JMP', 'OR', 'XOR', 'AND', 'NOT', 'ADD', 'SUB', 'PRS']}

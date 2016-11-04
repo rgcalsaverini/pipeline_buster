@@ -6,6 +6,7 @@ module.exports = React.createClass({
 
   PropTypes: {
     registers: React.PropTypes.object,
+    cycle: React.PropTypes.number,
   },
 
   componentWillReceiveProps: function(newProps){
@@ -25,12 +26,14 @@ module.exports = React.createClass({
       }
     }
 
-    this.setState({justChanged: justChanged});
+    if(this.props.cycle > 600){
+      console.log('*** ', this.props.cycle);
+      this.setState({justChanged: justChanged});
 
-    window.setTimeout(function(){
-      this.setState({justChanged: []});
-    }.bind(this), 200)
-
+      window.setTimeout(function(){
+        this.setState({justChanged: []});
+      }.bind(this), this.props.cycle/4);
+    }
   },
 
   getInitialState: function(){
@@ -46,7 +49,7 @@ module.exports = React.createClass({
       padding: '5px',
       fontFamily: "'Conv_ponde___'",
       fontSize: '20px',
-      transition: 'all ease-in-out 200ms',
+      transition: 'all ease-in-out ' + String(this.props.cycle/5) + 'ms',
       borderRadius: '4px',
     }
 

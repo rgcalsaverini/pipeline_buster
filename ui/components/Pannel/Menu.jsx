@@ -77,8 +77,8 @@ module.exports = React.createClass({
       <div>
         <Button onClick={this._playToggle}>{icon}</Button>
         <div style={styles.clockSpeed}>Clock Speed:</div>
-        <Button><span style={styles.textButton}>+</span></Button>
-        <Button><span style={styles.textButton}>-</span></Button>
+        <Button onClick={window.components.speedUpCycle}><span style={styles.textButton}>+</span></Button>
+        <Button onClick={window.components.slowDownCycle}><span style={styles.textButton}>-</span></Button>
       </div>
     );
   },

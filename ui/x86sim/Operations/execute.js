@@ -32,6 +32,8 @@ module.exports = function(operation, instruction, registers, stack) {
   // }
 
   var bits = registers.IR.split(' ');
+  var halt = false;
+  var info;
 
   switch (bits[0].trim()) {
     case 'MOV':
@@ -82,6 +84,12 @@ module.exports = function(operation, instruction, registers, stack) {
       break;
 
     case 'IDIV':
+      if(registers[bits[2]] == 0){
+        return {
+          success: false,
+          message: '[ '+registers.PC+' ] Divisao por zero.',
+        };
+      }
       quo = (registers[bits[1]] / registers[bits[2]])|0;
       registers[bits[2]] = Number(registers[bits[1]]) % Number(registers[bits[2]]);
       registers[bits[1]] = quo;
@@ -164,11 +172,20 @@ module.exports = function(operation, instruction, registers, stack) {
       if(registers.Z || registers.SF)
         registers.PC = valueOf(bits[1], registers) - 1;
       break;
+
+    case 'HLT':
+      halt = true;
+      break;
+
+    case 'PRS':
+      info = stack.join(' ');
   }
 
   return {
     success: true,
+    halt: halt,
     registers: registers,
     stack: {contents: stack},
+    info: info,
   }
 };

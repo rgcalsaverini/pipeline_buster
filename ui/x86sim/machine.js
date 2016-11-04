@@ -10,7 +10,7 @@ module.exports = (function(){
   var _regs;
   var _regs;
   var _stack;
-  var _clockCycle = 1000;
+  var _clockCycle;
   var _stages;
   var _code;
   var _intervalID;
@@ -19,11 +19,12 @@ module.exports = (function(){
   var _opcodes
 
 
-  var init = function(registers, returnRegister, stages, opcodes){
+  var init = function(registers, returnRegister, stages, opcodes, clock){
     _regs = {};
 
     _gprs = registers;
     _opcodes = opcodes;
+    _clockCycle = clock;
 
     for(var i = 0 ; i < registers.length ; i++){
       _regs[registers[i]] = 0;
@@ -68,7 +69,7 @@ module.exports = (function(){
     }
 
     var _running = true;
-    _intervalID = window.setInterval(_cycle.bind(null, communication, stopCallback), _clockCycle);
+    _intervalID = window.setTimeout(_cycle.bind(null, communication, stopCallback), _clockCycle);
     communication('update', ['rodando', _regs, _stack]);
   };
 
@@ -90,6 +91,9 @@ module.exports = (function(){
     if(communicate){
       communication('update', ['rodando', _regs, _stack]);
     }
+
+    _intervalID = window.setTimeout(_cycle.bind(null, communication, stopCallback), _clockCycle);
+    console.log('_clockCycle', _clockCycle);
   };
 
   var _runStage = function(stage, communication){
@@ -143,20 +147,22 @@ module.exports = (function(){
 
   var _runStageExecute = function(stage, operation, communication){
     res = Operations.execute(operation, _regs.IR, _regs, _stack);
-    console.log('res', res);
 
     if(!_processRes(res, communication)){
       return false;
     }
-    console.log('_regs', _regs);
 
     return true;
   };
 
   var _processRes = function(res, communication){
     _regs = merge(_regs, res.registers);
+
     if(res.stack)
       _stack = res.stack.contents;
+
+    if(res.info)
+      communication('info', [res.info]);
 
     if(!res.success){
       stop();
@@ -165,13 +171,27 @@ module.exports = (function(){
       return false;
     }
 
+    if(res.halt)
+      _regs.PC = _code.length;
+
     return true;
+  };
+
+  var speedUpCycle = function(){
+    _clockCycle = Math.max(100, _clockCycle * 0.7);
+    return _clockCycle;
+  };
+
+  var slowDownCycle = function(){
+    _clockCycle = Math.min(5000, _clockCycle * 1.3);
+    return _clockCycle;
   };
 
   return {
     init: init,
     run: run,
     stop: stop,
-    setCycleDelay: setCycleDelay,
+    speedUpCycle: speedUpCycle,
+    slowDownCycle: slowDownCycle,
   };
 })();

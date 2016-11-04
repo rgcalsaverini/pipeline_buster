@@ -16,6 +16,7 @@ machines = {
         'gprs': ['A', 'B', 'C'],
         'registers': {},
         'returnRegister': 'A',
+        'cycle': 1000,
         'pipeline': [
             {
                 'img': 'block',
@@ -23,5 +24,6 @@ machines = {
                 'operations': ['ins_fetch', 'decode', 'execute', 'mem', 'write'],
             },
         ],
+        'halt': False,
     }
 }

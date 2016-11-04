@@ -112,7 +112,7 @@ module.exports = React.createClass({
         </div>
 
         <div style={styles.registers}>
-          <Registers registers={machineData.registers}/>
+          <Registers cycle={machineData.cycle} registers={machineData.registers}/>
         </div>
 
         <div style={styles.menu}>

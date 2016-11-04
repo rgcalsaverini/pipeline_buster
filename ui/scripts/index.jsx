@@ -50,7 +50,7 @@ var ReactComponents = (function () {
         _machine = result;
         _initCodeInput(input_el, _machine.opcodes, _machine.gprs, _machine.code.limit);
         _initPannel(pannel_el, _machine);
-        MachineSim.init(_machine.gprs, _machine.returnRegister, _machine.pipeline, _machine.opcodes);
+        MachineSim.init(_machine.gprs, _machine.returnRegister, _machine.pipeline, _machine.opcodes, _machine.cycle);
       },
     );
   };
@@ -97,11 +97,23 @@ var ReactComponents = (function () {
     _machineStoped();
   };
 
+  var speedUpCycle = function(){
+    _machine.cycle = MachineSim.speedUpCycle();
+    _initPannel(_pannel_el, _machine);
+  };
+
+  var slowDownCycle = function(){
+    _machine.cycle = MachineSim.slowDownCycle();
+    _initPannel(_pannel_el, _machine);
+  };
+
   return {
     loadMachine: loadMachine,
     messageMachine: messageMachine,
     runMachine: runMachine,
     stopMachine: stopMachine,
+    speedUpCycle: speedUpCycle,
+    slowDownCycle: slowDownCycle,
   };
 })();
 
