@@ -1,5 +1,6 @@
 opcodes = {
     'MOV':  [2, "Move o literal ou registrador contido no operando A para o operando B"],
+    'NOP':  [0, "Nao-operacao, apenas ocupa um ciclo"],
     'PUSH': [1, "Coloca o operando no topo da pilha"],
     'POP':  [1, "Remove um elemento do topo da pilha para o operando"],
     'ADD':  [2, "Soma os operandos A e B e armazena o resultado no operando A"],
@@ -27,7 +28,6 @@ opcodes = {
     'JL':   [1, "Jump condicional menor que"],
     'JLE':  [1, "Jump condicional menor ou igual a"],
     'HLT':  [0, "Interrompe a execucao"],
-    'NOP':  [0, "Nao-operacao, apenas ocupa um ciclo"],
 
 }
 

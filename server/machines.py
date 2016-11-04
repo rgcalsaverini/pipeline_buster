@@ -20,7 +20,7 @@ machines = {
             {
                 'img': 'block',
                 'text': 'Not Pipelined',
-                'operations': ['ins_fetch', 'decode', 'reg_fetch', 'exec', 'mem', 'write'],
+                'operations': ['ins_fetch', 'decode', 'exec', 'mem', 'write'],
             },
         ],
     }

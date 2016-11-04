@@ -1,6 +1,8 @@
 var Operations = require('./Operations');
 var merge = require('../utils/merge.js');
 
+var __fetchOps = ['ins_fetch'];
+var __decodeOps = ['decode'];
 
 module.exports = (function(){
   var _running = false;
@@ -12,18 +14,22 @@ module.exports = (function(){
   var _code;
   var _intervalID;
   var _returnRegister;
+  var _gprs;
+  var _opcodes
 
-  var __fetchOps = ['ins_fetch'];
 
-  var init = function(registers, returnRegister, stages){
+  var init = function(registers, returnRegister, stages, opcodes){
     _regs = {};
+
+    _gprs = registers;
+    _opcodes = opcodes;
 
     for(var i = 0 ; i < registers.length ; i++){
       _regs[registers[i]] = 0;
     }
 
     _regs.PC = 0;
-    _regs.PC2 = 0;
+    _regs._PC2 = 0;
     _regs.SP = 0;
     _regs.IR = null;
     _regs.Z = false;
@@ -97,18 +103,33 @@ module.exports = (function(){
           return false;
         }
       }
+
+      else if(__decodeOps.indexOf(operation) > -1){
+        if(!_runStageDecode(stage, operation, communication)){
+          return false;
+        }
+      }
     }
 
+    return true;
+  };
+
+    var _runStageFetch = function(stage, operation, communication){
+      if(_regs.PC == _code.length){
+        stop(communication);
+        return false;
+      }
+
+      res = Operations.fetch(operation, _code, _regs.PC, _regs._PC2);
+
+      if(!_processRes(res, communication)){
+        return false;
+      }
       return true;
     };
 
-  var _runStageFetch = function(stage, operation, communication){
-    if(_regs.PC == _code.length){
-      stop(communication);
-      return false;
-    }
-
-    res = Operations.fetch(operation, _code, _regs.PC, _regs.PC2);
+  var _runStageDecode = function(stage, operation, communication){
+    res = Operations.decode(operation, _regs.IR, _gprs, _regs.PC, _opcodes);
 
     if(!_processRes(res, communication)){
       return false;
@@ -116,12 +137,12 @@ module.exports = (function(){
     return true;
   };
 
-
   var _processRes = function(res, communication){
     _regs = merge(_regs, res.regs);
 
     if(!res.success){
       stop();
+      communication('update', ['desligado', _regs, _stack]);
       communication('error', [res.error]);
       return false;
     }

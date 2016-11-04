@@ -11,7 +11,7 @@ module.exports = function(operation, code, pc, pc2) {
     success: true,
     regs: {
       PC: pc+1,
-      PC2: pc,
+      _PC2: pc,
       IR: code[pc],
     }
   }

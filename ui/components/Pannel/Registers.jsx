@@ -56,9 +56,11 @@ module.exports = React.createClass({
     var output = []
 
     for(var i = 0 ; i < regs.length ; i++){
-      var justChanged = this.state.justChanged.indexOf(regs[i]) != -1;
-      var style = merge(baseStyle, justChanged && {backgroundColor: 'rgba(255, 255, 255, .2)'});
-      output.push(<div key={i} style={style}>{regs[i]}: {this.props.registers[regs[i]]}</div>);
+      if(regs[i][0] != '_'){
+        var justChanged = this.state.justChanged.indexOf(regs[i]) != -1;
+        var style = merge(baseStyle, justChanged && {backgroundColor: 'rgba(255, 255, 255, .2)'});
+        output.push(<div key={i} style={style}>{regs[i]}: {String(this.props.registers[regs[i]])}</div>);
+      }
     }
     return output;
   },
