@@ -56,8 +56,6 @@ var ReactComponents = (function () {
   };
 
   var messageMachine = function(type, args){
-      console.log('MESSAGE: ', type, args);
-      console.log('received message', args);
       if(type == 'error'){
         _machine.message = 'Erro: ' + args[0];
         _machine.messageError = true;

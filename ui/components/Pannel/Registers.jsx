@@ -20,8 +20,6 @@ module.exports = React.createClass({
       var newReg = String(newProps.registers[newKeys[i]]).trim();
       var oldReg = String(this.props.registers[newKeys[i]]).trim();
 
-      console.log('OLD/NEW', oldReg, newReg, !oldReg || oldReg != newReg);
-
       if(!oldReg || oldReg != newReg) {
         justChanged.push(newKeys[i]);
       }

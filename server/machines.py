@@ -1,10 +1,10 @@
-from server.instructions import basic
+from server.instructions import basic, opcodes
 
 machines = {
     0: {
         'name': 'Basic Non-Pipelined',
         'status': 'desligado',
-        'opcodes': basic,
+        'opcodes': opcodes,
         'code':{
             'limit': 20,
             'contents': [],
@@ -20,7 +20,7 @@ machines = {
             {
                 'img': 'block',
                 'text': 'Not Pipelined',
-                'operations': ['ins_fetch', 'decode', 'exec', 'mem', 'write'],
+                'operations': ['ins_fetch', 'decode', 'execute', 'mem', 'write'],
             },
         ],
     }

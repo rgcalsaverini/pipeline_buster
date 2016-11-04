@@ -72,7 +72,6 @@ module.exports = React.createClass({
         </span>
       );
     }
-    console.log(result);
     return result;
   },
 
@@ -144,7 +143,7 @@ module.exports = React.createClass({
                 SP - Aponta para o topo do stack<br/><br/>
                 EFLAGS:<br/>
                 Z - Flag zero<br/>
-                SN - Flag de sinal<br/>
+                SF - Flag de sinal<br/>
 
                 <div style={{height: '20px'}}/>
                 <div style={styles.title}>OpCodes</div>

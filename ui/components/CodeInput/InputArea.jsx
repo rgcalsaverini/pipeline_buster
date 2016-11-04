@@ -161,8 +161,6 @@ module.exports = React.createClass({
 
     }
 
-    console.log(this._lineHeight, this.props.limitLines, String(this.props.lineHeight * this.props.limitLines) + 'px');
-
     var linesLock;
 
     if(this.props.limitLines && this.props.limitLines < numLines){

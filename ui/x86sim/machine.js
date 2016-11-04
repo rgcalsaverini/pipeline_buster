@@ -3,6 +3,7 @@ var merge = require('../utils/merge.js');
 
 var __fetchOps = ['ins_fetch'];
 var __decodeOps = ['decode'];
+var __executeOps = ['execute'];
 
 module.exports = (function(){
   var _running = false;
@@ -32,8 +33,8 @@ module.exports = (function(){
     _regs._PC2 = 0;
     _regs.SP = 0;
     _regs.IR = null;
-    _regs.Z = false;
-    _regs.SN = false;
+    _regs.Z = null;
+    _regs.SF = null;
 
     _returnRegister = returnRegister;
 
@@ -42,7 +43,6 @@ module.exports = (function(){
   };
 
   var stop = function(communication){
-    console.log('STOP: ', communication);
     var _running = false;
     window.clearInterval(_intervalID);
 
@@ -58,8 +58,8 @@ module.exports = (function(){
   };
 
   var run = function(code, communication, stopCallback){
-    console.log('CODE: ', code);
     _code = code;
+    _stack = [];
     _regs.PC = 0;
 
     for(var i = 0 ; i < _stages.length ; i++){
@@ -82,14 +82,12 @@ module.exports = (function(){
         stopCallback();
         break;
       }
-
-      if(_stages[i].in == null){
-        break;
-      }
+      // if(_stages[i].in == null){
+      //   break;
+      // }
     }
 
     if(communicate){
-      console.log('-> communicating');
       communication('update', ['rodando', _regs, _stack]);
     }
   };
@@ -106,6 +104,12 @@ module.exports = (function(){
 
       else if(__decodeOps.indexOf(operation) > -1){
         if(!_runStageDecode(stage, operation, communication)){
+          return false;
+        }
+      }
+
+      else if(__executeOps.indexOf(operation) > -1){
+        if(!_runStageExecute(stage, operation, communication)){
           return false;
         }
       }
@@ -137,8 +141,22 @@ module.exports = (function(){
     return true;
   };
 
+  var _runStageExecute = function(stage, operation, communication){
+    res = Operations.execute(operation, _regs.IR, _regs, _stack);
+    console.log('res', res);
+
+    if(!_processRes(res, communication)){
+      return false;
+    }
+    console.log('_regs', _regs);
+
+    return true;
+  };
+
   var _processRes = function(res, communication){
-    _regs = merge(_regs, res.regs);
+    _regs = merge(_regs, res.registers);
+    if(res.stack)
+      _stack = res.stack.contents;
 
     if(!res.success){
       stop();

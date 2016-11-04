@@ -53,8 +53,6 @@ module.exports = React.createClass({
       return (<span/>);
     }
 
-    console.log(this.state? this.state.innerHeight: 'wait');
-
     var styles = {
       container: {
         // backgroundColor: 'rgba(0, 255, 0, .1)',

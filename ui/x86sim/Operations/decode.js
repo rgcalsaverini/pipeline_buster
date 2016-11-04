@@ -22,7 +22,7 @@ function failNotFound(pc, inst){
 }
 
 firstMustBeReg = ['MOV', 'POP', 'ADD', 'SUB', 'INC', 'DEC', 'IMUL', 'IDIV', 'AND', 'OR', 'XOR', 'NOT', 'SHL', 'SHR']
-seccondMustBeReg = ['IMUL', 'IDIV']
+seccondMustBeReg = ['IDIV']
 
 module.exports = function(operation, instruction, gprs, pc, valid_opcodes) {
   var bits = instruction.split(' ');
