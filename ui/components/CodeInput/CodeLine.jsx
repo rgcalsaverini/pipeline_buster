@@ -1,6 +1,7 @@
 var React = require('react');
 var Caret = require('./Caret.jsx');
 
+
 module.exports = React.createClass({
   displayName: 'CodeLine',
 
@@ -13,11 +14,6 @@ module.exports = React.createClass({
     error: React.PropTypes.boolean,
     hideCaret: React.PropTypes.boolean,
   },
-
-  // getInitialState: function(){
-  //   return {
-  //   };
-  // },
 
   render: function(){
     var lineHeight = String(this.props.lineHeight) + 'px';
@@ -54,36 +50,38 @@ module.exports = React.createClass({
       },
     }
 
-    var codeRaw = this.props.children.trim();
-    var code = [];
-    var codeBits = codeRaw.split(' ');
-    var hasOpcode = false;
+    var tokenStyle= {
+      'OP': {color: '#D1965A',},
+      'LABEL': {color: '#F0CA4D',},
+      'COMMENT': {color: 'rgba(255, 255, 255, .3)', fontSize: '18px', marginBottom: '1px',},
+      'NUM': {color: '#56B6C2',},
+      'ADDR': {color: '#8DC36C',},
+      'REG': {color: '#8DC36C', textDecoration: 'underline'},
+      'ERROR': {color: '#DD4242',},
+    };
 
-    /*if(codeRaw[codeRaw.length-1] == ':') {
-      code = (<span style={{color: "#E2C08D"}}>{codeRaw}</span>);
-    } else*/ if(Object.keys(this.props.opcodes).indexOf(codeBits[0]) > -1){
-      if(codeBits.length-1 <= this.props.opcodes[codeBits[0]][0]){
-        code.push(<span key={0} style={{color: "#D1965A"}}>{codeBits[0]} </span>);
-        hasOpcode = true;
-      } else {
-        code.push(<span key={0} style={{color: "#DD4242"}}>{codeRaw}</span>);
+    var lexScan = this.props.children;
+    var code = []
+
+    if(!lexScan.success){
+      if(this.props.current != null){
+        code = (<span>{lexScan.whole}</span>);
+      }else{
+        code = (<span style={tokenStyle['ERROR']}>{lexScan.whole}</span>);
       }
-    } else if(this.props.current == null){
-      code.push(<span key={0} style={{color: "#DD4242"}}>{codeRaw}</span>);
-    }else {
-      code.push(<span key={0}>{this.props.children}</span>);
-    }
-
-    for(var i = 1 ; hasOpcode && i < codeBits.length ; i++){
-      if(!isNaN(Number(codeBits[i].trim()))) {
-        code.push(<span key={i} style={{color: "#56B6C2"}}>{codeBits[i]} </span>);
-      } else if(this.props.registers.indexOf(codeBits[i]) > -1) {
-        code.push(<span key={i}><span key={0} style={{color: "#98C379", textDecoration: 'underline'}}>{codeBits[i]}</span><span key={1}> </span></span>);
-      } else if(this.props.current == null) {
-        code = (<span key={i} style={{color: "#DD4242"}}>{codeRaw}</span>);
-        break;
-      } else {
-        code.push(<span key={i}>{codeBits[i]} </span>);
+    } else {
+      for(var i = 0 ; i < lexScan.scan.length ; i++){
+        var token = lexScan.scan[i].token;
+        code.push(
+          <span key={i}>
+            <span key={1} data-token={token} style={tokenStyle[token]}>
+              {lexScan.scan[i].val}
+            </span>
+            <span key={2} style={{textDecoration: 'none'}}>
+              {i == lexScan.scan.length - 1 ? "" : " "}
+            </span>
+          </span>
+        );
       }
     }
 
@@ -108,4 +106,3 @@ module.exports = React.createClass({
     );
   },
 });
-//

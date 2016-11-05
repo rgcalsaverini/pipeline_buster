@@ -1,0 +1,10 @@
+line ::= label? operation argumentlist comment? | comment
+label ::= [A-Z]+ ':' space
+space ::= ' '+
+operation ::= [A-Z]+ space
+argumentlist ::= argument | argument space argument
+argument ::= number | register | address
+number ::= [0-9]+
+register ::= [A-Z]+
+address ::= '['number']'
+comment ::= ';' .+

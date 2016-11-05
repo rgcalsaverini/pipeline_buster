@@ -17,6 +17,7 @@ module.exports = (function(){
   var _returnRegister;
   var _gprs;
   var _opcodes
+  var _failed;
 
 
   var init = function(registers, returnRegister, stages, opcodes, clock){
@@ -124,7 +125,8 @@ module.exports = (function(){
 
     var _runStageFetch = function(stage, operation, communication){
       if(_regs.PC == _code.length){
-        stop(communication);
+        if(!_failed)
+          stop(communication);
         return false;
       }
 
@@ -168,6 +170,7 @@ module.exports = (function(){
       stop();
       communication('update', ['desligado', _regs, _stack]);
       communication('error', [res.error]);
+      _failed = true;
       return false;
     }
 

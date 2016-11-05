@@ -1,6 +1,8 @@
 var React = require('react');
 var CodeLine = require('./CodeLine.jsx');
 var LockIcon = require('../Icons').Lock;
+var Lex = require('../../x86sim/lex.js');
+
 
 module.exports = React.createClass({
   displayName: 'InputArea',
@@ -23,6 +25,7 @@ module.exports = React.createClass({
   getInitialState: function(){
     return {
       code: '',
+      scan: [],
       focus: false,
       caret: 0,
     };
@@ -30,29 +33,36 @@ module.exports = React.createClass({
 
   _evaluateLines: function(lines){
     var correctedLines = [];
+    var scan = []
     var numLines = (this.props.height / this._lineHeight)|0;
     numLines = this.props.limitLines ? Math.min(numLines, this.props.limitLines) : numLines;
 
-    for(var i = 0 ; i < lines.length ; i++){
+    for(var i = 0 ; i < lines.length && i < numLines; i++){
       var line = lines[i];
+      var lexEval = Lex.evalLine(line);
+      var lexWhole = lexEval.whole;
 
-      if(line.length > 0){
-        line = line.toUpperCase();
-        line = line[line.length-1] == ' ' ? line.trim() + ' ' : line.trim();
-        correctedLines.push(line);
+      scan.push(lexEval);
+
+      if(lexWhole.length > 0){
+        lexWhole = lexWhole.toUpperCase();
+        lexWhole = lexWhole[lexWhole.length-1] == ' ' ? lexWhole.trim() + ' ' : lexWhole.trim();
+        correctedLines.push(lexWhole);
       }
     }
 
-    if(lines[lines.length-1] == '')
+    if(lines[lines.length-1] == '' && i < numLines)
       correctedLines.push('');
 
-    return correctedLines.slice(0, numLines);
+    return [correctedLines, scan];
   },
 
   _handleChange: function(event){
-    var lines = this._evaluateLines(event.target.value.split(/\n|\r/));
+    var evaluation = this._evaluateLines(event.target.value.split(/\n|\r/));
+    var lines = evaluation[0];
+    var scan = evaluation[1];
     this.props.onChange(lines);
-    this.setState({code: lines.join('\n')});
+    this.setState({code: lines.join('\n'), scan: scan});
   },
 
   _handleFocus: function(){
@@ -83,7 +93,7 @@ module.exports = React.createClass({
     var code = this.state.code.split(/\n|\r/);
     var output = [];
     var caret =  typeof highlightLine != 'undefined' ? 0 : this.state.caret;
-    for(var i = 0 ; i < code.length ; i++){
+    for(var i = 0 ; i < this.state.scan.length ; i++){
       var isCurrent = (caret >= 0 && caret <= code[i].length) || (i == code.length-1 && caret >= 0);
       output.push(
         <CodeLine
@@ -96,7 +106,7 @@ module.exports = React.createClass({
           error={typeof highlightLine != 'undefined' && this.props.highlightError}
           hideCaret={typeof highlightLine != 'undefined'}
         >
-          {code[i]}
+          {this.state.scan[i]}
         </CodeLine>
       );
 

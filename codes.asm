@@ -1,3 +1,4 @@
+; Fibo
 MOV A 1
 CMP A 10
 JGE 19
@@ -17,3 +18,13 @@ PUSH B
 INC A
 JMP 2
 MOV A 0
+
+; Count
+MOV A 0
+MOV B A
+SUB B 10
+JZ 8
+PUSH A
+INC A
+JMP 2
+PRS
