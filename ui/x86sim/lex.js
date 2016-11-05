@@ -33,6 +33,7 @@ module.exports = (function(){
 
     var scan = [];
     var whole = '';
+    var hasComments = false;
     var bits = line.split(/[\t| ]+/);
     for(var i = 0 ; i < bits.length ; i++){
       // First token must be label, op or comment
@@ -51,6 +52,7 @@ module.exports = (function(){
           var comment = bits.slice(i, bits.length).join(' ');
           scan.push({val: comment, token: 'COMMENT'});
           whole += comment;
+          hasComments = true;
           break;
         }
         else{
@@ -91,6 +93,7 @@ module.exports = (function(){
           var comment = bits.slice(i, bits.length).join(' ');
           whole += comment;
           scan.push({val: comment, token: 'COMMENT'});
+          hasComments = true;
           break;
         }
         else {
@@ -103,6 +106,7 @@ module.exports = (function(){
         var comment = bits.slice(i, bits.length).join(' ');
         whole += comment;
         scan.push({val: comment, token: 'COMMENT'});
+        hasComments = true;
         break;
       }
     }
@@ -110,7 +114,7 @@ module.exports = (function(){
     return {
       success: true,
       scan: scan,
-      whole: whole,
+      whole: hasComments? whole : whole.trim(),
     };
   };
 

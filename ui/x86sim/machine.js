@@ -74,7 +74,7 @@ module.exports = (function(){
     }
 
     var _running = true;
-    _intervalID = window.setTimeout(_cycle.bind(null, communication, stopCallback), _clockCycle);
+    _intervalID = window.setInterval(_cycle.bind(null, communication, stopCallback), _clockCycle);
     communication('update', ['rodando', _regs, _stack]);
   };
 
@@ -121,7 +121,7 @@ module.exports = (function(){
       communication('update', ['rodando', _regs, _stack]);
     }
 
-    _intervalID = window.setTimeout(_cycle.bind(null, communication, stopCallback), _clockCycle);
+    // _intervalID = window.setTimeout(_cycle.bind(null, communication, stopCallback), _clockCycle);
   };
 
   var _runStage = function(stage, communication){
