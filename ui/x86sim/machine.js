@@ -79,13 +79,12 @@ module.exports = (function(){
   };
 
   var _loadLabels = function(){
-    console.log('code: ', _code.length );
     for(var i = 0 ; i < _code.length ; i++){
-      console.log('* LINE ', i);
-      console.log('    first is of token', _code[i].scan[0].token)
+      if(_code[i].scan.length < 1)
+        continue
+
       if(_code[i].scan[0].token == 'LABEL'){
         var newLabel = _code[i].scan[0].val.substr(0, _code[i].scan[0].val.length-1);
-        console.log('    label is ', newLabel);
         if(Object.keys(_regs._LABELS).indexOf(newLabel) == -1){
           _regs._LABELS[newLabel] = i+1;
         }

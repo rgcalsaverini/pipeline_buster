@@ -13,10 +13,10 @@ module.exports = function(operation, code, pc) {
   //     return {success: true, halt: true};
   //   }
   // }
-
-  while(code[pc].scan[0].token == 'COMMENT'){
+  if(code[pc].scan.length < 1) return {success: true, halt: true};
+  while(code[pc].scan[0].token == 'COMMENT' || code[pc].whole.length < 1){
     pc++;
-    if(pc >= code.length) {
+    if(pc >= code.length || code[pc].scan.length < 1) {
       return {success: true, halt: true};
     }
   }

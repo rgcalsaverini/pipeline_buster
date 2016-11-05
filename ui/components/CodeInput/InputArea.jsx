@@ -25,7 +25,7 @@ module.exports = React.createClass({
   getInitialState: function(){
     return {
       code: '',
-      scan: [],
+      scan: [{scan:[], whole: ''}],
       focus: false,
       caret: 0,
     };
@@ -58,10 +58,15 @@ module.exports = React.createClass({
 
   _handleChange: function(event){
     var evaluation = this._evaluateLines(event.target.value.toUpperCase().split(/\n|\r/));
-    var lines = evaluation[0];
+    var lines = evaluation[0].join('\n');
     var scan = evaluation[1];
     this.props.onChange(scan);
-    this.setState({code: lines.join('\n'), scan: scan});
+    var oldLen = this.state.code.lenght;
+
+
+    this.setState({code: lines, scan: scan}, function(oldLen){
+      this._inputRef.selectionEnd = this._inputRef.selectionStart = this.state.caret+1;
+    }.bind(this, oldLen));
   },
 
   _handleFocus: function(){
@@ -73,13 +78,13 @@ module.exports = React.createClass({
     this.setState({focus: false});
   },
 
-  _caretToEnd: function(){
-    this._inputRef.selectionStart = this._inputRef.selectionEnd = this.state.code.length+1;
-  },
+  // _caretToEnd: function(){
+  //   this._inputRef.selectionStart = this._inputRef.selectionEnd = this.state.code.length+1;
+  // },
 
   _getCaret: function(){
     this.setState({caret: this._inputRef.selectionStart}, function(){
-      this._inputRef.selectionEnd = this._inputRef.selectionStart = this.state.caret;
+      this._inputRef.selectionEnd = this._inputRef.selectionStart;
     }.bind(this))
   },
 
@@ -92,8 +97,9 @@ module.exports = React.createClass({
     var code = this.state.code.split(/\n|\r/);
     var output = [];
     var caret =  typeof highlightLine != 'undefined' ? 0 : this.state.caret;
-    for(var i = 0 ; i < this.state.scan.length ; i++){
+    for(var i = 0 ; i < code.length ; i++){
       var isCurrent = (caret >= 0 && caret <= code[i].length) || (i == code.length-1 && caret >= 0);
+
       output.push(
         <CodeLine
           opcodes={this.props.opcodes}
@@ -109,8 +115,9 @@ module.exports = React.createClass({
         </CodeLine>
       );
 
-      if(typeof highlightLine == 'undefined')
+      if(typeof highlightLine == 'undefined'){
         caret = caret - (code[i].length + 1);
+      }
     }
     return output;
   },

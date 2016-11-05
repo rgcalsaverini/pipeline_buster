@@ -8,7 +8,7 @@ var MachineSim = require('../x86sim/machine.js');
 
 var ReactComponents = (function () {
   var _machine;
-  var _code=[];
+  var _code = [];
   var _input_el;
   var _pannel_el;
   var _stopCallback;
@@ -33,6 +33,7 @@ var ReactComponents = (function () {
   };
 
   var _handleCodeChange = function(value){
+    console.log(_code);
     _code = value;
   };
 
@@ -119,4 +120,4 @@ var ReactComponents = (function () {
 
 module.exports = (function(){
   window.components = ReactComponents;
-})()
+})();

@@ -15,7 +15,7 @@ module.exports = React.createClass({
   render: function(){
     var styles={
       container: {
-        border: '2px dashed rgba(0,0,0,.2)',
+        // borderBottom: this.props.first? '0px solid black' : '2px dashed rgba(255, 255, 255, .8)',
         marginLeft: '10px',
         marginRight: '10px',
         width: 'calc(100% - 35px)',
