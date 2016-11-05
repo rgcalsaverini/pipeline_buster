@@ -79,11 +79,11 @@ module.exports = React.createClass({
 
     return (
       <div style={styles.container}>
-        <div style={styles.left}/>
-        <div style={styles.right}/>
-        <div style={styles.top}/>
-        {bottom}
-        <div style={styles.contents}>{this.props.children}</div>
+        <div key={1} style={styles.left}/>
+        <div key={2} style={styles.right}/>
+        <div key={3} style={styles.top}/>
+        <span key={4}>{bottom}</span>
+        <div key={5} style={styles.contents}>{this.props.children}</div>
       </div>
     );
   },

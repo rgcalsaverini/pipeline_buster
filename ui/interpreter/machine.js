@@ -70,10 +70,10 @@ module.exports = (function(){
     _stack.contents = [];
     _regs.PC = 0;
 
-    for(var i = 0 ; i < _stages.length ; i++){
-      _stages[i].in = null;
-      _stages[i].out = null;
-    }
+    // for(var i = 0 ; i < _stages.length ; i++){
+    //   _stages[i].in = null;
+    //   _stages[i].out = null;
+    // }
 
     var _running = true;
     _intervalID = window.setInterval(_cycle.bind(null, communication, stopCallback), _clockCycle);
@@ -107,16 +107,16 @@ module.exports = (function(){
     var communicate = true;
 
     console.log('--------| Cycle |--------');
-    for(var i = 0 ; i < _stages.length ; i++){
-      if(!_runStage(_stages[i], communication)){
+    // for(var i = 0 ; i < _stages.length ; i++){
+      if(!_runStage(_stages[0], communication)){
         communicate = false;
         stopCallback();
-        break;
+        // break;
       }
       // if(_stages[i].in == null){
       //   break;
       // }
-    }
+    // }
 
     if(communicate){
       communication('update', ['rodando', _regs, _stack]);

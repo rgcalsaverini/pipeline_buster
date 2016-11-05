@@ -25,9 +25,29 @@ machines = {
         'cycle': 1000,
         'pipeline': [
             {
-                'img': 'block',
-                'text': 'Not Pipelined',
+                'img': 'box',
+                'text': 'Fetch',
                 'operations': ['ins_fetch', 'decode', 'execute', 'mem', 'write'],
+            },
+            {
+                'img': 'box',
+                'text': 'Decode',
+                'operations': [],
+            },
+            {
+                'img': 'alu',
+                'text': 'Exec',
+                'operations': [],
+            },
+            {
+                'img': 'box',
+                'text': 'Mem',
+                'operations': [],
+            },
+            {
+                'img': 'box',
+                'text': 'Write',
+                'operations': [],
             },
         ],
         'halt': False,

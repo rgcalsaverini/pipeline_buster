@@ -2,15 +2,17 @@ var React = require('react');
 var ReactDOM = require('react-dom');
 var CodeInput = require('../components/CodeInput');
 var Pannel = require('../components/Pannel');
+var Pipeline = require('../components/Pipeline');
 var request = require('../utils/request.js');
 var merge = require('../utils/merge.js');
-var MachineSim = require('../x86sim/machine.js');
+var MachineSim = require('../interpreter/machine.js');
 
 var ReactComponents = (function () {
   var _machine;
   var _code = [];
   var _input_el;
   var _pannel_el;
+  var _pipeline_el;
   var _stopCallback;
 
   var _initCodeInput = function(el, opcodes, registers, limitLines, locked, highlight, error) {
@@ -32,6 +34,10 @@ var ReactComponents = (function () {
     ReactDOM.render(<Pannel data={data}/>, el);
   };
 
+  var _initPipeline = function(el, stages) {
+    ReactDOM.render(<Pipeline stages={stages}/>, el);
+  };
+
   var _handleCodeChange = function(value){
     _code = value;
   };
@@ -42,14 +48,16 @@ var ReactComponents = (function () {
     _initPannel(_pannel_el, _machine);
   };
 
-  var loadMachine = function(machine_id, input_el, pannel_el){
+  var loadMachine = function(machine_id, input_el, pannel_el, pipeline_el){
     _input_el = input_el;
     _pannel_el = pannel_el;
+    _pipeline_el = pipeline_el;
     request.get('/machine/' + machine_id).then(
       function(result){
         _machine = result;
         _initCodeInput(input_el, _machine.opcodes, _machine.gprs, _machine.code.limit);
         _initPannel(pannel_el, _machine);
+        _initPipeline(pipeline_el, _machine.pipeline);
         MachineSim.init(_machine.gprs, _machine.returnRegister,
           _machine.pipeline, _machine.opcodes, _machine.cycle,
           _machine.memory, _machine.stack);

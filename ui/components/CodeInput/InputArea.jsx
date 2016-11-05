@@ -1,7 +1,7 @@
 var React = require('react');
 var CodeLine = require('./CodeLine.jsx');
 var LockIcon = require('../Icons').Lock;
-var Lex = require('../../x86sim/lex.js');
+var Lex = require('../../interpreter/lex.js');
 
 
 module.exports = React.createClass({
