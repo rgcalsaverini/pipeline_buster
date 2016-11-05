@@ -84,9 +84,14 @@ module.exports = (function(){
           scan.push({val: bits[i], token: 'REG'});
           continue;
         }
-        else if(_isAddress(bits[i])){
+        else if(_isConstAddress(bits[i])){
           whole += bits[i] + ' ';
-          scan.push({val: bits[i], token: 'ADDR'});
+          scan.push({val: bits[i], token: 'CON_ADDR'});
+          continue;
+        }
+        else if(_isRegAddress(bits[i])){
+          whole += bits[i] + ' ';
+          scan.push({val: bits[i], token: 'REG_ADDR'});
           continue;
         }
         if(_isComment(bits[i])){
@@ -138,8 +143,12 @@ module.exports = (function(){
     return /^[A-Z]+$/.test(bit);
   };
 
-  var _isAddress = function(bit){
-    return /^\[[0-9]+|[A-Z]+\]$/.test(bit);
+  var _isConstAddress = function(bit){
+    return /^\[[0-9]+\]$/.test(bit);
+  };
+
+  var _isRegAddress = function(bit){
+    return /^\[[A-Z]+\]$/.test(bit);
   };
 
   return {

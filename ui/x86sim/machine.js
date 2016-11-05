@@ -18,14 +18,16 @@ module.exports = (function(){
   var _gprs;
   var _opcodes
   var _failed;
+  var _mem;
 
 
-  var init = function(registers, returnRegister, stages, opcodes, clock){
+  var init = function(registers, returnRegister, stages, opcodes, clock, memory, stack){
     _regs = {};
 
     _gprs = registers;
     _opcodes = opcodes;
     _clockCycle = clock;
+    _mem = memory;
 
     for(var i = 0 ; i < registers.length ; i++){
       _regs[registers[i]] = 0;
@@ -39,7 +41,7 @@ module.exports = (function(){
     _regs._LABELS = {};
     _returnRegister = returnRegister;
 
-    _stack = [];
+    _stack = stack;
     _stages = stages;
   };
 
@@ -65,7 +67,7 @@ module.exports = (function(){
       return;
     }
 
-    _stack = [];
+    _stack.contents = [];
     _regs.PC = 0;
 
     for(var i = 0 ; i < _stages.length ; i++){
@@ -165,7 +167,7 @@ module.exports = (function(){
     };
 
   var _runStageDecode = function(stage, operation, communication){
-    res = Operations.decode(operation, _regs._IR, _gprs, _regs.PC, _opcodes, _regs._LABELS);
+    res = Operations.decode(operation, _regs._IR, _regs, _regs.PC, _opcodes, _regs._LABELS, _mem);
 
     if(!_processRes(res, communication)){
       return false;
@@ -174,7 +176,7 @@ module.exports = (function(){
   };
 
   var _runStageExecute = function(stage, operation, communication){
-    res = Operations.execute(operation, _regs.IR, _regs, _stack);
+    res = Operations.execute(operation, _regs.IR, _regs, _stack, _mem);
 
     if(!_processRes(res, communication)){
       return false;
@@ -187,7 +189,10 @@ module.exports = (function(){
     _regs = merge(_regs, res.registers);
 
     if(res.stack)
-      _stack = res.stack.contents;
+      _stack = res.stack;
+
+    if(res.memory)
+      _mem = res.memory;
 
     if(res.info)
       communication('info', [res.info]);

@@ -15,7 +15,7 @@ module.exports = React.createClass({
   render: function(){
     var styles={
       container: {
-        // borderBottom: this.props.first? '0px solid black' : '2px dashed rgba(255, 255, 255, .8)',
+        // borderBottom: '2px dashed rgba(255, 255, 255, .8)',
         marginLeft: '10px',
         marginRight: '10px',
         width: 'calc(100% - 35px)',
@@ -32,7 +32,7 @@ module.exports = React.createClass({
 
       left: {
         width: '4px',
-        height: '35px',
+        height: '31px',
         position: 'absolute',
         left: '10px',
         backgroundColor: 'rgba(255, 255, 255, .8)',
@@ -41,7 +41,7 @@ module.exports = React.createClass({
 
       right: {
         width: '4px',
-        height: '35px',
+        height: '31px',
         position: 'absolute',
         right: '10px',
         backgroundColor: 'rgba(255, 255, 255, .8)',
@@ -49,21 +49,21 @@ module.exports = React.createClass({
       },
 
       top: {
-        right: '15px',
+        right: '14px',
         backgroundColor: 'rgba(255, 255, 255, .8)',
         position: 'absolute',
-        left: '15px',
+        left: '14px',
         height: '4px',
         marginTop: '-9px',
       },
 
       bottom: {
-        right: '15px',
+        right: '14px',
         backgroundColor: 'rgba(255, 255, 255, .8)',
         position: 'absolute',
-        left: '15px',
+        left: '14px',
         height: '4px',
-        marginTop: '31px',
+        marginTop: '25px',
       },
 
       contents:{

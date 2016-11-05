@@ -1,4 +1,6 @@
 from server.instructions import basic, opcodes
+from random import randint
+
 
 machines = {
     0: {
@@ -10,8 +12,12 @@ machines = {
             'contents': [],
         },
         'stack': {
-            'limit': 12,
+            'limit': 16,
             'contents': [],
+        },
+        'memory': {
+            'limit': 256,
+            'contents': [randint(-255, 255) for _ in range(256)],
         },
         'gprs': ['A', 'B', 'C'],
         'registers': {},

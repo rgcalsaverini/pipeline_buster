@@ -1,10 +1,3 @@
-function valueOf(arg, regs){
-  if(arg.type == 'NUM')
-    return arg.val;
-  else if(arg.type == 'REG')
-    return regs[arg.val];
-}
-
 function setEflags(registers, regArg){
   registers.Z = registers[regArg.val] == 0;
   registers.SF = registers[regArg.val] < 0;
@@ -16,146 +9,209 @@ function clearEflags(registers){
   registers.SF = null;
 }
 
-module.exports = function(operation, instruction, registers, stack) {
+function getArg(arg, p){
+  return arg[p].actual;
+}
+
+function setArg(arg, mem, regs, val){
+  if(arg.type == 'REG') {
+    regs[arg.val] = val;
+    return;
+  }
+
+  if(arg.type == 'REG_ADDR'){
+    var addr = regs[arg.val];
+    mem.contents[addr] = val;
+    return;
+  }
+
+  if(arg.type == 'CON_ADDR'){
+    mem.contents[arg.val] = val;
+    return;
+  }
+
+  if(arg.type == 'NUM') {
+    return '[ ' + regs.PC + ' ] Tentado atribuir valor a uma constante.';
+  }
+
+  if(arg.type == 'LABEL') {
+    return '[ ' + regs.PC + ' ] Tentado atribuir valor a uma label.';
+  }
+
+  return '[ ' + regs.PC + ' ] Atribuicao invalida.'
+}
+
+module.exports = function(operation, instruction, registers, stack, memory) {
   var halt = false;
   var info;
   var args = registers._ARGS;
 
-  console.log('registers', registers);
+  console.log('args on execute', args);
 
   switch (registers._OP.trim()) {
     case 'MOV':
-      console.log('INSIDE MOV');
-      registers[args[0].val] = valueOf(args[1], registers);
-      console.log('INSIDE MOV');
+      var ret = setArg(args[0], memory, registers, getArg(args, 1));
+      if(ret) return { success: false, error: ret}
       registers = clearEflags(registers);
       break;
 
     case 'PUSH':
-      stack.push(valueOf(args[0], registers));
+      if(registers.SP >= stack.limit - 1){
+        return {
+          success: false,
+          error: '[ ' + registers.PC + ' ] Stack smashing detectado.',
+        };
+      }
+
+      stack.contents.push(getArg(args, 0));
       registers.SP++;
+
       registers = clearEflags(registers);
       break;
 
     case 'POP':
-      registers[args[0].val] = stack.pop();
+      if(registers.SP <= 0){
+        return {
+          success: false,
+          error: '[ '+registers.PC+' ] Stack vazio.',
+        };
+      }
+
+      var ret = setArg(args[0], memory, registers, stack.contents.pop());
       registers.SP--;
       registers = clearEflags(registers);
       break;
 
     case 'ADD':
-      registers[args[0].val] += valueOf(args[1], registers);
+      var ret = setArg(args[0], memory, registers, getArg(args, 0) + getArg(args, 1));
+      if(ret) return { success: false, error: ret}
       registers = setEflags(registers, args[0]);
       break;
 
     case 'SUB':
-      registers[args[0].val] -= valueOf(args[1], registers);
+      var ret = setArg(args[0], memory, registers, getArg(args, 0) - getArg(args, 1));
+      if(ret) return { success: false, error: ret}
       registers = setEflags(registers, args[0]);
       break;
 
     case 'INC':
-      registers[args[0].val]++;
+      var ret = setArg(args[0], memory, registers, getArg(args, 0) + 1);
+      if(ret) return { success: false, error: ret}
       registers = setEflags(registers, args[0]);
       break;
 
     case 'DEC':
-      registers[args[0].val]--;
+      var ret = setArg(args[0], memory, registers, getArg(args, 0) - 1);
+      if(ret) return { success: false, error: ret}
       registers = setEflags(registers, args[0]);
       break;
 
     case 'IMUL':
-      registers[args[0].val] *= valueOf(args[1], registers);
+      var ret = setArg(args[0], memory, registers, getArg(args, 0) * getArg(args, 1));
+      if(ret) return { success: false, error: ret}
       registers = setEflags(registers, args[0]);
       break;
 
     case 'IDIV':
-      if(registers[args[1].val] == 0){
+      if(getArg(args, 1) == 0){
         return {
           success: false,
-          message: '[ '+registers.PC+' ] Divisao por zero.',
+          error: '[ '+registers.PC+' ] Divisao por zero.',
         };
       }
-      quo = (registers[args[0].val] / registers[args[1].val])|0;
-      registers[args[1].val] = Number(registers[args[0].val]) % Number(registers[args[1].val]);
-      registers[args[0].val] = quo;
+      quo = (getArg(args, 0) / getArg(args, 1))|0;
+
+      var ret = setArg(args[1], memory, registers, getArg(args, 0) % getArg(args, 1));
+      if(ret) return { success: false, error: ret}
+
+      var ret = setArg(args[0], memory, registers, quo);
+      if(ret) return { success: false, error: ret}
+
       registers = setEflags(registers, args[0]);
       break;
 
     case 'AND':
-      registers[args[0].val] &= valueOf(args[1], registers);
+      var ret = setArg(args[0], memory, registers, getArg(args, 0) & getArg(args, 1));
+      if(ret) return { success: false, error: ret}
       registers = setEflags(registers, args[0]);
       registers.SF = null;
       break;
 
     case 'OR':
-      registers[args[0].val] |= valueOf(args[1], registers);
+      var ret = setArg(args[0], memory, registers, getArg(args, 0) | getArg(args, 1));
+      if(ret) return { success: false, error: ret}
       registers = setEflags(registers, args[0]);
       registers.SF = null;
       break;
 
     case 'XOR':
-      registers[args[0].val] ^= valueOf(args[1], registers);
+      var ret = setArg(args[0], memory, registers, getArg(args, 0) ^ getArg(args, 1));
+      if(ret) return { success: false, error: ret}
       registers = setEflags(registers, args[0]);
       registers.SF = null;
       break;
 
     case 'NOT':
-      registers[args[0].val] = -valueOf(args[0], registers);
+      var ret = setArg(args[0], memory, registers, -getArg(args, 0));
+      if(ret) return { success: false, error: ret}
       registers = setEflags(registers, args[0]);
+      registers.SF = null;
       break;
 
     case 'SHL':
-      registers[args[0].val] <<= valueOf(args[1], registers);
+      var ret = setArg(args[0], memory, registers, getArg(args, 0) << getArg(args, 1));
+      if(ret) return { success: false, error: ret}
       registers = setEflags(registers, args[0]);
       break;
 
     case 'SHR':
-      registers[args[0].val] >>= valueOf(args[1], registers);
+      var ret = setArg(args[0], memory, registers, getArg(args, 0) >> getArg(args, 1));
+      if(ret) return { success: false, error: ret}
       registers = setEflags(registers, args[0]);
       break;
 
     case 'CMP':
-      registers.Z = valueOf(args[0], registers) - valueOf(args[1], registers) == 0;
-      registers.SF = valueOf(args[0], registers) - valueOf(args[1], registers) < 0;
+      registers.Z = getArg(args, 0) - getArg(args, 1) == 0;
+      registers.SF = getArg(args, 0) - getArg(args, 1) < 0;
       break;
 
     case 'JMP':
-      registers.PC = valueOf(args[0], registers) - 1;
+      registers.PC = getArg(args, 0) - 1;
       break;
 
     case 'JE':
       if(registers.Z)
-        registers.PC = valueOf(args[0], registers) - 1;
+        registers.PC = getArg(args, 0) - 1;
       break;
 
     case 'JNE':
       if(!registers.Z)
-        registers.PC = valueOf(args[0], registers) - 1;
+        registers.PC = getArg(args, 0) - 1;
       break;
 
     case 'JZ':
       if(registers.Z)
-        registers.PC = valueOf(args[0], registers) - 1;
+        registers.PC = getArg(args, 0) - 1;
       break;
 
     case 'JG':
       if(!registers.Z && !registers.SF)
-        registers.PC = valueOf(args[0], registers) - 1;
+        registers.PC = getArg(args, 0) - 1;
       break;
 
     case 'JGE':
       if(registers.Z || !registers.SF)
-        registers.PC = valueOf(args[0], registers) - 1;
+        registers.PC = getArg(args, 0) - 1;
       break;
 
     case 'JL':
       if(!registers.Z && registers.SF)
-        registers.PC = valueOf(args[0], registers) - 1;
+        registers.PC = getArg(args, 0) - 1;
       break;
 
     case 'JGE':
       if(registers.Z || registers.SF)
-        registers.PC = valueOf(args[0], registers) - 1;
+        registers.PC = getArg(args, 0) - 1;
       break;
 
     case 'HLT':
@@ -163,14 +219,15 @@ module.exports = function(operation, instruction, registers, stack) {
       break;
 
     case 'PRS':
-      info = stack.join(' ');
+      info = stack.contents.join(' ');
   }
 
   return {
     success: true,
     halt: halt,
     registers: registers,
-    stack: {contents: stack},
+    stack: stack,
+    memory: memory,
     info: info,
   }
 };

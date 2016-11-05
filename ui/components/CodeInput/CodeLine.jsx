@@ -55,7 +55,8 @@ module.exports = React.createClass({
       'LABEL': {color: '#F0CA4D',},
       'COMMENT': {color: 'rgba(255, 255, 255, .3)', fontSize: '18px', marginBottom: '1px',},
       'NUM': {color: '#56B6C2',},
-      'ADDR': {color: '#8DC36C',},
+      'REG_ADDR': {color: '#8DC36C',},
+      'CON_ADDR': {color: '#8DC36C',},
       'REG': {color: '#8DC36C', textDecoration: 'underline'},
       'ERROR': {color: '#DD4242',},
     };

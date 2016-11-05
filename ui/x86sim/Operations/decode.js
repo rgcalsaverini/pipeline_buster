@@ -1,7 +1,64 @@
+function getVal(arg, regs, labels, mem, pc){
+  var isReg = function(regs, r){
+    return Object.keys(regs).indexOf(r) != -1;
+  };
+
+  var isLabel = function(labels, l){
+    return Object.keys(labels).indexOf(l) != -1;
+  };
+
+  if(arg.type == 'NUM'){
+    return [true, Number(arg.val)];
+  }
+
+  else if(arg.type == 'REG'){
+    if(isReg(regs, arg.val))
+      return [true, regs[arg.val]];
+    else if(isLabel(labels, arg.val))
+      return [true, labels[arg.val]];
+    else
+      return [false, failInvalidReg(pc, arg.val)];
+  }
+
+  else if(arg.type == 'REG_ADDR'){
+    if(isReg(regs, arg.val))
+      return [true, regs[arg.val]];
+    else
+      return [false, failInvalidReg(pc, arg.val)];
+
+    var addr = regs[arg.val];
+
+    if(addr >= mem.limit || addr < 0){
+      return [false, failOutsideMem(pc, addr)];
+    }
+
+    return [true, mem.contents[addr]];
+  }
+
+  else if(arg.type == 'CON_ADDR'){
+    var addr = arg.val;
+
+    if(addr >= mem.limit || addr < 0){
+      return [false, failOutsideMem(pc, addr)];
+    }
+
+    return [true, mem.contents[addr]];
+  }
+
+  return [false, '[ ' + pc + ' ] Erro desconhecido'];
+}
+
 function fail(message, pc){
-  return {
-    success: false,
-    error: '[ ' + pc + ' ] ' + message,
+  if(pc) {
+    return {
+      success: false,
+      error: '[ ' + pc + ' ] ' + message,
+    }
+  } else {
+    return {
+      success: false,
+      error: message,
+    }
   }
 }
 
@@ -17,6 +74,10 @@ function failInvalidReg(pc, reg){
   return fail('Registrador ' + reg + ' nao e valido.', pc);
 }
 
+function failOutsideMem(pc, addr){
+  return fail('Accessando memoria invalida no endereco ' + addr + '.', pc);
+}
+
 function failNotFound(pc, inst){
   return fail('Instrucao ' + inst + ' nao faz parte dos opcodes deste sistema', pc);
 }
@@ -30,11 +91,9 @@ firstNotNum = ['MOV', 'POP', 'ADD', 'SUB', 'INC', 'DEC', 'IMUL', 'IDIV', 'AND', 
 secondNotNum = ['IDIV'];
 acceptsLabel = ['JMP', 'JZ', 'JNZ', 'JE', 'JNE', 'JG', 'JGE', 'JL', 'JLE'];
 
-module.exports = function(operation, instruction, gprs, pc, valid_opcodes, labels) {
+module.exports = function(operation, instruction, registers, pc, valid_opcodes, labels, memory) {
   var operation;
   var args = [];
-
-
 
   for(var i = 0 ; i < instruction.scan.length ; i++){
     var value = instruction.scan[i].val;
@@ -47,8 +106,11 @@ module.exports = function(operation, instruction, gprs, pc, valid_opcodes, label
     else if(instruction.scan[i].token == 'REG')
       args.push({type: 'REG', val: value});
 
-    else if(instruction.scan[i].token == 'ADDR')
-      args.push({type: 'ADDR', val: value.substr(1, value.length-1)});
+    else if(instruction.scan[i].token == 'CON_ADDR')
+      args.push({type: 'CON_ADDR', val: Number(value.substr(1, value.length-2))});
+
+    else if(instruction.scan[i].token == 'REG_ADDR')
+      args.push({type: 'REG_ADDR', val: value.substr(1, value.length-2)});
   }
 
   // Valid opcode
@@ -66,24 +128,11 @@ module.exports = function(operation, instruction, gprs, pc, valid_opcodes, label
     fail(instruction.error, pc);
   }
 
-  // First not num
-  if(firstNotNum.indexOf(operation) != -1){
-    if(args[0].type == 'NUM'){
-      return failNotNum(pc, operation, 1);
-    }
-  }
-
-  // Second not num
-  if(secondNotNum.indexOf(operation) != -1){
-    if(args[1].type == 'NUM')
-      return failNotNum(pc, operation, 2);
-  }
-
   // Not all mem
   if(args.length > 1){
     var allMem = true;
     for(var i = 0 ; i < args.length ; i++){
-      if(args[i].type != 'ADDR'){
+      if(args[i].type != 'CON_ADDR' && args[i].type != 'REG_ADDR'){
         allMem = false;
         break;
       }
@@ -93,16 +142,18 @@ module.exports = function(operation, instruction, gprs, pc, valid_opcodes, label
       return failAllMem(pc, operation);
   }
 
-  // Registers exist
-  for(var i = 0 ; i < args.length ; i++){
-    if(args[i].type == 'REG' && gprs.indexOf(args[i].val) == -1){
-      if(acceptsLabel.indexOf(operation) != -1 && Object.keys(labels).indexOf(args[i].val) != -1){
-        args[i] = {type: 'NUM', val: labels[args[i].val]}
-      }else{
-        return failInvalidReg(pc, args[i].val)
-      }
+  // decode args
+  for(var i = 0; i < args.length ; i++){
+    res = getVal(args[i], registers, labels, memory, pc);
+
+    if(res[0]) {
+      args[i].actual = res[1];
+    } else {
+      return res[1];
     }
   }
+
+  console.log('args on decode ', args);
 
   return {
     success: true,

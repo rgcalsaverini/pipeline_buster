@@ -27,9 +27,9 @@ module.exports = React.createClass({
         </div>);
     }
 
-    var limit = ((this.props.height - 55)/39)|0;
+    var limit = ((this.props.height - 35)/35)|0;
     var numCells = this.props.contents.length;
-    var topPadding = String(Math.max(0, this.props.height - numCells * 39 - 35)) + 'px';
+    var topPadding = String(Math.max(0, this.props.height - numCells * 35 - 35)) + 'px';
     var cells = [<span style={{paddingTop: topPadding}}/>];
 
     for(var i = numCells-1; i >= 0; i--){

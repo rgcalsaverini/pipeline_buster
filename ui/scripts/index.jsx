@@ -33,7 +33,6 @@ var ReactComponents = (function () {
   };
 
   var _handleCodeChange = function(value){
-    console.log(_code);
     _code = value;
   };
 
@@ -51,7 +50,9 @@ var ReactComponents = (function () {
         _machine = result;
         _initCodeInput(input_el, _machine.opcodes, _machine.gprs, _machine.code.limit);
         _initPannel(pannel_el, _machine);
-        MachineSim.init(_machine.gprs, _machine.returnRegister, _machine.pipeline, _machine.opcodes, _machine.cycle);
+        MachineSim.init(_machine.gprs, _machine.returnRegister,
+          _machine.pipeline, _machine.opcodes, _machine.cycle,
+          _machine.memory, _machine.stack);
       },
     );
   };
@@ -67,7 +68,7 @@ var ReactComponents = (function () {
       else if(type == 'update'){
         _machine.status = args[0];
         _machine.registers = args[1];
-        _machine.stack.contents = args[2];
+        _machine.stack = args[2];
         _initPannel(_pannel_el, _machine);
         _initCodeInput(_input_el, _machine.opcodes, _machine.gprs,
           _machine.code.limit, true, _machine.registers.PC, _machine.messageError)
