@@ -46,7 +46,6 @@ module.exports = React.createClass({
 
       if(lexWhole.length > 0){
         lexWhole = lexWhole.toUpperCase();
-        lexWhole = lexWhole[lexWhole.length-1] == ' ' ? lexWhole.trim() + ' ' : lexWhole.trim();
         correctedLines.push(lexWhole);
       }
     }
@@ -58,10 +57,10 @@ module.exports = React.createClass({
   },
 
   _handleChange: function(event){
-    var evaluation = this._evaluateLines(event.target.value.split(/\n|\r/));
+    var evaluation = this._evaluateLines(event.target.value.toUpperCase().split(/\n|\r/));
     var lines = evaluation[0];
     var scan = evaluation[1];
-    this.props.onChange(lines);
+    this.props.onChange(scan);
     this.setState({code: lines.join('\n'), scan: scan});
   },
 

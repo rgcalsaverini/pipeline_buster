@@ -27,7 +27,6 @@ module.exports = React.createClass({
     }
 
     if(this.props.cycle > 600){
-      console.log('*** ', this.props.cycle);
       this.setState({justChanged: justChanged});
 
       window.setTimeout(function(){
@@ -51,6 +50,9 @@ module.exports = React.createClass({
       fontSize: '20px',
       transition: 'all ease-in-out ' + String(this.props.cycle/5) + 'ms',
       borderRadius: '4px',
+      whiteSpace: 'nowrap',
+      overflow: 'hidden',
+      textOverflow: 'ellipsis',
     }
 
     var regs = Object.keys(this.props.registers);

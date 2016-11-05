@@ -32,12 +32,11 @@ module.exports = (function(){
     }
 
     _regs.PC = 0;
-    _regs._PC2 = 0;
     _regs.SP = 0;
     _regs.IR = null;
     _regs.Z = null;
     _regs.SF = null;
-
+    _regs._LABELS = {};
     _returnRegister = returnRegister;
 
     _stack = [];
@@ -61,6 +60,11 @@ module.exports = (function(){
 
   var run = function(code, communication, stopCallback){
     _code = code;
+
+    if(!_loadLabels()){
+      return;
+    }
+
     _stack = [];
     _regs.PC = 0;
 
@@ -72,6 +76,30 @@ module.exports = (function(){
     var _running = true;
     _intervalID = window.setTimeout(_cycle.bind(null, communication, stopCallback), _clockCycle);
     communication('update', ['rodando', _regs, _stack]);
+  };
+
+  var _loadLabels = function(){
+    console.log('code: ', _code.length );
+    for(var i = 0 ; i < _code.length ; i++){
+      console.log('* LINE ', i);
+      console.log('    first is of token', _code[i].scan[0].token)
+      if(_code[i].scan[0].token == 'LABEL'){
+        var newLabel = _code[i].scan[0].val.substr(0, _code[i].scan[0].val.length-1);
+        console.log('    label is ', newLabel);
+        if(Object.keys(_regs._LABELS).indexOf(newLabel) == -1){
+          _regs._LABELS[newLabel] = i+1;
+        }
+        else {
+          stop();
+          communication('update', ['desligado', _regs, _stack]);
+          communication('error', ['[ ' + + ' ] Label ' + newLabel + 'ja foi definida na linha' + _regs._LABELS[newLabel]]);
+          _failed = true;
+          return false;
+        }
+      }
+    }
+
+    return true;
   };
 
   var _cycle = function(communication, stopCallback){
@@ -94,7 +122,6 @@ module.exports = (function(){
     }
 
     _intervalID = window.setTimeout(_cycle.bind(null, communication, stopCallback), _clockCycle);
-    console.log('_clockCycle', _clockCycle);
   };
 
   var _runStage = function(stage, communication){
@@ -130,7 +157,7 @@ module.exports = (function(){
         return false;
       }
 
-      res = Operations.fetch(operation, _code, _regs.PC, _regs._PC2);
+      res = Operations.fetch(operation, _code, _regs.PC);
 
       if(!_processRes(res, communication)){
         return false;
@@ -139,7 +166,7 @@ module.exports = (function(){
     };
 
   var _runStageDecode = function(stage, operation, communication){
-    res = Operations.decode(operation, _regs.IR, _gprs, _regs.PC, _opcodes);
+    res = Operations.decode(operation, _regs._IR, _gprs, _regs.PC, _opcodes, _regs._LABELS);
 
     if(!_processRes(res, communication)){
       return false;

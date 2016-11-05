@@ -30,7 +30,7 @@ module.exports = (function(){
     if(line.length < 1){
       return {success: true, scan: [], whole: ''};
     }
-    
+
     var scan = [];
     var whole = '';
     var bits = line.split(/[\t| ]+/);
@@ -49,7 +49,7 @@ module.exports = (function(){
         }
         else if(_isComment(bits[i])){
           var comment = bits.slice(i, bits.length).join(' ');
-          scan.push({val: bits[i], token: 'COMMENT'});
+          scan.push({val: comment, token: 'COMMENT'});
           whole += comment;
           break;
         }
@@ -90,7 +90,7 @@ module.exports = (function(){
         if(_isComment(bits[i])){
           var comment = bits.slice(i, bits.length).join(' ');
           whole += comment;
-          scan.push({val: bits[i], token: 'COMMENT'});
+          scan.push({val: comment, token: 'COMMENT'});
           break;
         }
         else {
@@ -102,7 +102,7 @@ module.exports = (function(){
       if(_isComment(bits[i])){
         var comment = bits.slice(i, bits.length).join(' ');
         whole += comment;
-        scan.push({val: bits[i], token: 'COMMENT'});
+        scan.push({val: comment, token: 'COMMENT'});
         break;
       }
     }
@@ -110,7 +110,7 @@ module.exports = (function(){
     return {
       success: true,
       scan: scan,
-      whole: whole.trim(),
+      whole: whole,
     };
   };
 
@@ -123,7 +123,7 @@ module.exports = (function(){
   };
 
   var _isComment = function(bit){
-    return /^;.+$/.test(bit);
+    return /^;.*$/.test(bit);
   };
 
   var _isNumber = function(bit){
@@ -135,7 +135,7 @@ module.exports = (function(){
   };
 
   var _isAddress = function(bit){
-    return /^\[[0-9]+\]$/.test(bit);
+    return /^\[[0-9]+|[A-Z]+\]$/.test(bit);
   };
 
   return {

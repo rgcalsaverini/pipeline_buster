@@ -1,4 +1,4 @@
-module.exports = function(operation, code, pc, pc2) {
+module.exports = function(operation, code, pc) {
   if(pc >= code.length){
     return {
       success: false,
@@ -7,12 +7,26 @@ module.exports = function(operation, code, pc, pc2) {
     }
   }
 
+  // console.log('code: ', code, '  pc: ', pc, ' line: ', code[pc], ' scan: ', code[pc].scan);
+  // for(var pc = pc; code[pc].scan[0].token != 'COMMENT' ; pc++ ){
+  //   if(pc >= code.length) {
+  //     return {success: true, halt: true};
+  //   }
+  // }
+
+  while(code[pc].scan[0].token == 'COMMENT'){
+    pc++;
+    if(pc >= code.length) {
+      return {success: true, halt: true};
+    }
+  }
+
   return {
     success: true,
     registers: {
       PC: pc+1,
-      _PC2: pc,
-      IR: code[pc],
+      IR: code[pc].whole,
+      _IR: code[pc]
     }
   }
 };
