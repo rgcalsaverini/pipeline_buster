@@ -57,16 +57,20 @@ var ReactComponents = (function () {
         hide={hide}
         title={title}
         destroyed={destroyed}
-        onClick={_dismissInfo}
+        onClick={destroyed ? _gotoOpening : _dismissInfo}
       >
         {info}
       </Announcment>, _info_el
     );
   };
 
+  var _gotoOpening = function(){
+    document.location.href = '/';
+  };
+
   var _dismissInfo = function(){
     manageInformation(true, '','', false);
-  }
+  };
 
   var _handleCodeChange = function(value){
     _code = value;
@@ -109,7 +113,7 @@ var ReactComponents = (function () {
 
       window.setTimeout(function(){
         manageInformation(false, _machine.infoWon, 'Muahahaha!', true);
-      }, 2000);
+      }, 1200);
 
     }
   };

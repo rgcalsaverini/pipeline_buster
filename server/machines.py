@@ -46,7 +46,7 @@ machines = {
         'infoMission': """
         <div style="width: 60vw">
             <div style="width: 40vw">
-            Vamos comecar nossa vinganca com o stack!<br/><br/>
+            Vamos comecar nossa vinganca pelo stack!<br/><br/>
             <span style="font-size: 70%">
                 Ele e um buffer de tamanho limitado, essencial para a
                 chamada de funcoes, que tem seus parametros e retorno
@@ -62,7 +62,7 @@ machines = {
         'infoWon': """
             <div style="width: 60vw">
                 <div style="width: 40vw">
-                Belo stack overflow!<br/><br/>
+                Burn, stack, burn!<br/><br/>
                 <span style="font-size: 70%">
                     Sobrecarregar o stack, alem de ser um bug comum, eh uma
                     vulnerabilidade perigosa! Seu abuso pode gerar a escalacao de
@@ -122,6 +122,29 @@ machines = {
             },
         ],
         'halt': False,
+        'winCondition': "/erro.+salto.+fora.+memoria/i.test(_machine.message)",
+        'infoMission': """
+        <div style="width: 60vw">
+            Chegou a vez do heap :)<br/><br/>
+            <span style="font-size: 70%">
+                Enquanto o stack eh 'mantido' pela CPU, o heap eh
+                um espaco de memoria dinamicamente alocado pelo SO que
+                fica a disposicao do seu codigo.
+                <br><br>
+                Vamos invalida-lo!<br>
+            </span>
+        </div>
+        """,
+        'infoWon': """
+            <div style="width: 60vw">
+                Lindo segfault!<br/><br/>
+                <span style="font-size: 70%">
+                    Segmentation faults ocorrem quando programas leem ou escrevem
+                    em regioes invalidas de memoria, eles sao o nemesis de programadores
+                    de linguagens sem garbage collection.<br/><br/>
+                </span>
+            </div>
+        """,
     },
 
     2: {
@@ -173,5 +196,72 @@ machines = {
             },
         ],
         'halt': False,
-    }
+        'winCondition': "(typeof _machine.registers._PC2 != -1 &&_machine.registers.PC - _machine.registers._PC2 != 1)",
+        'infoMission': """
+        <div style="width: 60vw">
+            Hora de atacar o pipeline!<br/><br/>
+            <span style="font-size: 70%">
+                Como em uma linha de montagem, o processador tenta executar
+                paralelamente varias etapas relacionadas com a execucao de codigo,
+                isso eh o chamado pipelining.<br/><br/>
+                Isso pode trazer alguns problemas, porem. Os chamados 'Control
+                Hazzards' dizem respeito aos problemas que emergem de branches
+                no codigo.<br/><br/>
+                Veja se consegue quebrar a proxima arquitetura!<br/><br/>
+                <img style="display: block; width: 30vw; position: relative;left: 15vw" src="/static/imgs/pipeline1.svg"/>
+            </span>
+        </div>
+        """,
+        'infoWon': """
+            <div style="width: 60vw">
+                Boa!<br/><br/>
+                <span style="font-size: 70%">
+                    O problema de prever e lidar com branches eh um muito pesquisado
+                    na computacao, e novas solucoes continuam aparecendo.<br/><br/>
+                    Control Hazards tem um impacto muito grande sobre a performance
+                    das arquiteturas atuais.
+                </span>
+            </div>
+        """,
+    },
+
+    666: {
+        'infoTitle': 'Sandbox',
+        'name': 'Unbreakable computer',
+        'status': 'desligado',
+        'opcodes': instructions.opcodes,
+        'code':{
+            'limit': 99,
+            'contents': [],
+        },
+        'stack': {
+            'limit': 20,
+            'contents': [],
+        },
+        'memory': {
+            'limit': 1024,
+            'contents': [randint(-255, 255) for _ in range(1024)],
+        },
+        'gprs': ['A', 'B', 'C'],
+        'registers': {},
+        'returnRegister': 'A',
+        'cycle': 1000,
+        'pipeline': [
+            {
+                'img': 'box',
+                'name': 'Unpipelined',
+                'operations': ['ins_fetch', 'decode', 'execute', 'mem', 'write'],
+            },
+        ],
+        'halt': False,
+        'winCondition': "(false)",
+        'infoMission': """
+        Este eh apenas um sandbox.<br/>
+        Nada para quebrar aqui.<br/>
+        Sossega<br/>
+        """,
+        'infoWon': """
+        Como??? :O
+        """,
+    },
 }

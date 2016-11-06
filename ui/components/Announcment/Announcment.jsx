@@ -99,6 +99,17 @@ module.exports = React.createClass({
       },
     };
 
+    var sound;
+
+    if(this.props.destroyed){
+      sound = (
+        <audio autoPlay>
+          <source src="/static/sounds/won.wav" type="audio/wav"/>
+        </audio>
+      );
+    }
+
+
     var board = (<Mission style={styles.mission}/>);
 
     if(this.props.destroyed){
@@ -108,6 +119,7 @@ module.exports = React.createClass({
     return (
       <div style={styles.container} onClick={this._handleClick}>
         {board}
+        {sound}
         <div style={styles.text}>
           <p dangerouslySetInnerHTML={{__html: this.props.children}} />
         </div>

@@ -25,6 +25,10 @@ module.exports = React.createClass({
     window.clearInterval(this._interval);
   },
 
+  _clickUsp: function(){
+    document.location.href = '/play/666';
+  },
+
   render: function(){
     var styles = {
       container: {
@@ -58,7 +62,7 @@ module.exports = React.createClass({
     return (
       <div style={styles.container}>
         <img style={styles.img} src={"/static/imgs/open_" + this.state.version +".svg"}/>
-        <img style={styles.usp} src="/static/imgs/usp.svg"/>
+        <img style={styles.usp} onClick={this._clickUsp} src="/static/imgs/usp.svg"/>
         <div style={styles.text}>
           Um jogo de pipelines, assembly e vandalismo por Rui Calsaverini<br/>
           SSC0114 - Arquitetura de Computadores

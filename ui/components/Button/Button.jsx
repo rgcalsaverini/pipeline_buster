@@ -15,6 +15,7 @@ module.exports = React.createClass({
   getInitialState: function(){
     return {
       hover: false,
+      sound: false,
     };
   },
 
@@ -30,6 +31,10 @@ module.exports = React.createClass({
     if(this.props.onClick){
       this.props.onClick();
     }
+    this.setState({sound: true});
+    window.setTimeout(function(){
+      this.setState({sound: false});
+    }.bind(this), 1000);
   },
 
   render: function(){
@@ -46,6 +51,17 @@ module.exports = React.createClass({
         cursor: 'pointer',
       },
     }
+
+    var sound;
+
+    if(this.state.sound){
+      sound = (
+        <audio autoPlay>
+          <source src="/static/sounds/button.wav" type="audio/wav"/>
+        </audio>
+      );
+    }
+
     return (
       <div
         onMouseEnter={this._handleMouseEnter}
@@ -53,6 +69,7 @@ module.exports = React.createClass({
         onClick={this._handleClick}
         style={merge(styles.container, this.props.style)}
       >
+        {sound}
         <span>{this.props.children}</span>
       </div>
     );

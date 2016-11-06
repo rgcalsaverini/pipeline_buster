@@ -33,6 +33,7 @@ module.exports = (function(){
       _regs[registers[i]] = 0;
     }
 
+    _regs._PC2 = 0;
     _regs.PC = 0;
     _regs.SP = 0;
     _regs.IR = null;
@@ -68,6 +69,7 @@ module.exports = (function(){
     }
 
     _stack.contents = [];
+    _regs._PC2 = -1;
     _regs.PC = 0;
 
     // for(var i = 0 ; i < _stages.length ; i++){
@@ -158,6 +160,7 @@ module.exports = (function(){
         return false;
       }
 
+      _regs._PC2 = _regs.PC;
       res = Operations.fetch(operation, _code, _regs.PC);
 
       if(!_processRes(res, communication)){
