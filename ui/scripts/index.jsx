@@ -24,6 +24,8 @@ var ReactComponents = (function () {
         opcodes={opcodes}
         registers={registers}
         limitLines={limitLines}
+        limitMem={_machine.memory.limit}
+        limitStack={_machine.stack.limit}
         onChange={_handleCodeChange}
         locked={locked}
         highlightLine={highlight}
@@ -41,11 +43,22 @@ var ReactComponents = (function () {
     ReactDOM.render(<Pipeline stages={stages}/>, el);
   };
 
-  var manageInformation = function(hide, info, title){
-    ReactDOM.render(<Announcment hide={hide} title={title}>
-      {info}
-    </Announcment>, _info_el);
+  var manageInformation = function(hide, info, title, destroyed){
+    ReactDOM.render(
+      <Announcment
+        hide={hide}
+        title={title}
+        destroyed={destroyed}
+        onClick={_dismissInfo}
+      >
+        {info}
+      </Announcment>, _info_el
+    );
   };
+
+  var _dismissInfo = function(){
+    manageInformation(true, '','', false);
+  }
 
   var _handleCodeChange = function(value){
     _code = value;
@@ -66,7 +79,7 @@ var ReactComponents = (function () {
     request.get('/machine/' + machine_id).then(
       function(result){
         _machine = result;
-        manageInformation(false, 'hi', _machine.infoTitle);
+        manageInformation(false, _machine.infoMission, _machine.infoTitle);
         _initCodeInput(input_el, _machine.opcodes, _machine.gprs, _machine.code.limit);
         _initPannel(pannel_el, _machine);
         _initPipeline(pipeline_el, _machine.pipeline);
@@ -77,11 +90,28 @@ var ReactComponents = (function () {
     );
   };
 
+  var _checkVictory = function() {
+    var won = eval(_machine.winCondition);
+    if(won){
+      if(MachineSim.isRunning()){
+        MachineSim.stop();
+      }
+
+      _machine.status = 'quebrado';
+
+      window.setTimeout(function(){
+        manageInformation(false, _machine.infoWon, 'Muahahaha!', true);
+      }, 2000);
+
+    }
+  };
+
   var messageMachine = function(type, args){
       if(type == 'error'){
         _machine.message = 'Erro: ' + args[0];
         _machine.messageError = true;
         console.error('Erro: ' + args[0]);
+        _checkVictory();
         _initPannel(_pannel_el, _machine);
       }
 
@@ -89,6 +119,7 @@ var ReactComponents = (function () {
         _machine.status = args[0];
         _machine.registers = args[1];
         _machine.stack = args[2];
+        _checkVictory();
         _initPannel(_pannel_el, _machine);
         _initCodeInput(_input_el, _machine.opcodes, _machine.gprs,
           _machine.code.limit, true, _machine.registers.PC, _machine.messageError)
@@ -97,6 +128,7 @@ var ReactComponents = (function () {
       else if(type == 'info'){
         _machine.message = args[0];
         _machine.messageError = false;
+        _checkVictory();
         _initPannel(_pannel_el, _machine);
       }
   };

@@ -131,8 +131,9 @@ module.exports = React.createClass({
             <div style={styles.helpWindow}>
               <div style={styles.helpModal}>
                 <div style={styles.title}>Memoria</div>
-                {this.props.limitLines * 9} bytes ou {this.props.limitLines} linhas de memoria de programa<br/>
-                NaN ou NaN linhas de memoria RAM (stack)
+                {this.props.limitLines} linhas de memoria de programa<br/>
+                {this.props.limitStack} linhas no stack<br/>
+                {this.props.limitMem} linhas no heap pre alocado<br/>
                 <div style={{height: '20px'}}/>
                 <div style={styles.title}>Registradores</div>
                 Registradores de proposito geral (GPR):<br/>

@@ -227,5 +227,6 @@ module.exports = (function(){
     stop: stop,
     speedUpCycle: speedUpCycle,
     slowDownCycle: slowDownCycle,
+    isRunning: function(){return _running;}
   };
 })();

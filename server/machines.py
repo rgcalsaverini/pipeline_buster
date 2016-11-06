@@ -13,7 +13,7 @@ machines = {
             'contents': [],
         },
         'stack': {
-            'limit': 4,
+            'limit': 2,
             'contents': [],
         },
         'memory': {
@@ -42,6 +42,40 @@ machines = {
             },
         ],
         'halt': False,
+        'winCondition': "/erro.+stack.+smash/i.test(_machine.message)",
+        'infoMission': """
+        <div style="width: 60vw">
+            <div style="width: 40vw">
+            Vamos comecar nossa vinganca com o stack!<br/><br/>
+            <span style="font-size: 70%">
+                Ele e um buffer de tamanho limitado, essencial para a
+                chamada de funcoes, que tem seus parametros e retorno
+                empilhados nele.<br><br>
+                O sistema operacional e capaz de colocar e retirar dados
+                do seu topo, conhecido em assembly como PUSH e POP.<br><br><br>
+                Deve ter um jeito de destrui-lo!<br>
+            </span>
+            </div>
+            <img style="display: inline-block; position: absolute; right: 70px; margin-top: -250px" src="/static/imgs/stack1.svg"/>
+        </div>
+        """,
+        'infoWon': """
+            <div style="width: 60vw">
+                <div style="width: 40vw">
+                Belo stack overflow!<br/><br/>
+                <span style="font-size: 70%">
+                    Sobrecarregar o stack, alem de ser um bug comum, eh uma
+                    vulnerabilidade perigosa! Seu abuso pode gerar a escalacao de
+                    privilegios e ja foi explorada para fraude em caixas eletronicos
+                    nos Estados Unidos.<br><br>
+                    Em geral sistemas mais modernos protegem o stack de overflow
+                    usando bits (chamados canaries) com valores conhecidos logo
+                    acima dele, identificando assim overflows.
+                </span>
+                </div>
+                <img style="display: inline-block; position: absolute; right: 70px; margin-top: -250px" src="/static/imgs/stack2.svg"/>
+            </div>
+        """,
     },
 
     1: {

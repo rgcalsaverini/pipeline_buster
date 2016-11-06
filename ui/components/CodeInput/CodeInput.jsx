@@ -9,6 +9,8 @@ module.exports = React.createClass({
     opcodes: React.PropTypes.object,
     registers: React.PropTypes.array,
     limitLines: React.PropTypes.number,
+    limitMem: React.PropTypes.number,
+    limitStack: React.PropTypes.number,
     locked: React.PropTypes.boolean,
     onChange: React.PropTypes.func,
     highlightLine: React.PropTypes.number,
@@ -89,6 +91,8 @@ module.exports = React.createClass({
             opcodes={this.props.opcodes}
             registers={this.props.registers}
             limitLines={this.props.limitLines}
+            limitStack={this.props.limitStack}
+            limitMem={this.props.limitMem}
           />
         </div>
       );

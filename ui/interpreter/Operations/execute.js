@@ -56,7 +56,7 @@ module.exports = function(operation, instruction, registers, stack, memory) {
       break;
 
     case 'PUSH':
-      if(registers.SP >= stack.limit - 1){
+      if(registers.SP >= stack.limit){
         return {
           success: false,
           error: '[ ' + registers.PC + ' ] Stack smashing detectado.',
