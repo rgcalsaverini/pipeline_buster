@@ -4,6 +4,7 @@ from random import randint
 
 machines = {
     0: {
+        'infoTitle': 'O Stack',
         'name': '1 - Stacker',
         'status': 'desligado',
         'opcodes': instructions.barebones,
@@ -44,6 +45,7 @@ machines = {
     },
 
     1: {
+        'infoTitle': 'Heap',
         'name': '2 - Bad memory',
         'status': 'desligado',
         'opcodes': instructions.basic,
@@ -89,6 +91,7 @@ machines = {
     },
 
     2: {
+        'infoTitle': 'Control Hazzards',
         'name': '3 - No jumping!',
         'status': 'desligado',
         'opcodes': instructions.opcodes,

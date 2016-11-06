@@ -6,13 +6,7 @@ module.exports = function(operation, code, pc) {
       PC: null,
     }
   }
-
-  // console.log('code: ', code, '  pc: ', pc, ' line: ', code[pc], ' scan: ', code[pc].scan);
-  // for(var pc = pc; code[pc].scan[0].token != 'COMMENT' ; pc++ ){
-  //   if(pc >= code.length) {
-  //     return {success: true, halt: true};
-  //   }
-  // }
+  
   if(code[pc].scan.length < 1) return {success: true, halt: true};
   while(code[pc].scan[0].token == 'COMMENT' || code[pc].whole.length < 1){
     pc++;

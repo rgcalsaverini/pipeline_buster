@@ -11,8 +11,8 @@ module.exports = React.createClass({
     name: React.PropTypes.string,
   },
 
-  _height: '80%',
-  _margin: '6.5%',
+  _height: '76%',
+  _margin: '8.0%',
 
   render: function(){
     var styles = {
