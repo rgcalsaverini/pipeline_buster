@@ -1,10 +1,9 @@
 var React = require('react');
-var BoxPipeIcon = require('./BoxPipeIcon.jsx');
-var BoxPipeIconArrow = require('./BoxPipeIconArrow.jsx');
+var InputPipeIconArrow = require('./InputPipeIconArrow.jsx');
 
 
 module.exports = React.createClass({
-  displayName: 'BoxPipe',
+  displayName: 'InputPipe',
 
   PropTypes: {
     terminal: React.PropTypes.boolean,
@@ -33,21 +32,18 @@ module.exports = React.createClass({
 
       name: {
         position: 'absolute',
-        width: '122px',
+        width: '85px',
         textAlign: 'center',
         fontFamily: "'Conv_mini_pixel-7'",
         fontSize: '32px',
         // backgroundColor: 'rgba(255, 0, 0, .2)',
         top: 'calc(50% - 10px)',
+        marginLeft: '32px',
         // paddingTop: 'calc(' + this._height + ' / 2 - 28px / 2)',
       },
     };
 
-    var icon =(<BoxPipeIconArrow style={styles.icon}/>);
-
-    if(this.props.terminal){
-      icon = (<BoxPipeIcon style={styles.icon}/>);
-    }
+    var icon =(<InputPipeIconArrow style={styles.icon}/>);
 
     return (
       <div style={styles.container}>

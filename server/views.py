@@ -4,8 +4,8 @@ from server.machines import machines
 import json
 
 
-def main(_=None):
-    return render_template('/main.html', debug=True)
+def play(machine):
+    return render_template('/play.html', machine=machine, debug=True)
 
 def machine(id):
     if id not in machines.keys():

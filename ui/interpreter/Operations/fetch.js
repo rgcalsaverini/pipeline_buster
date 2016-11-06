@@ -1,8 +1,8 @@
 module.exports = function(operation, code, pc) {
-  if(pc >= code.length){
+  if(pc >= code.length || pc < 0){
     return {
       success: false,
-      error: 'Salto para fora do espaco de memoria alocado (' + pc - 1 + ').',
+      error: 'Salto para fora do espaco de memoria alocado (' + String(pc) + ').',
       PC: null,
     }
   }

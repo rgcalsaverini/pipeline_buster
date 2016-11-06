@@ -26,7 +26,7 @@ function getVal(arg, regs, labels, mem, pc){
     else
       return [false, failInvalidReg(pc, arg.val)];
 
-    var addr = regs[arg.val];
+    var addr = Number(regs[arg.val]);
 
     if(addr >= mem.limit || addr < 0){
       return [false, failOutsideMem(pc, addr)];
@@ -36,7 +36,7 @@ function getVal(arg, regs, labels, mem, pc){
   }
 
   else if(arg.type == 'CON_ADDR'){
-    var addr = arg.val;
+    var addr = Number(arg.val);
 
     if(addr >= mem.limit || addr < 0){
       return [false, failOutsideMem(pc, addr)];

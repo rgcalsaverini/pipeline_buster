@@ -136,7 +136,7 @@ module.exports = (function(){
   };
 
   var _isNumber = function(bit){
-    return /^[0-9]+$/.test(bit);
+    return /^-?[0-9]+$/.test(bit);
   };
 
   var _isRegister = function(bit){

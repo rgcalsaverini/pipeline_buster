@@ -1,7 +1,7 @@
 from server import views, app
 
 routes = [
-    ('/',                   views.main,           ['GET']),
+    ('/play/<int:machine>',                   views.play,           ['GET']),
     # ('/machine',            views.list_machines,  ['GET']),
     ('/machine/<int:id>',   views.machine,  ['GET']),
 ]

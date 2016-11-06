@@ -32,4 +32,5 @@ opcodes = {
 
 }
 
-basic = {a: opcodes[a] for a in ['NOP', 'MOV', 'PUSH', 'POP', 'JZ', 'JNZ', 'JMP', 'OR', 'XOR', 'AND', 'NOT', 'ADD', 'SUB', 'PRS']}
+barebones = {a: opcodes[a] for a in ['NOP', 'MOV', 'PUSH', 'POP']}
+basic = {a: opcodes[a] for a in ['NOP', 'MOV', 'PUSH', 'POP', 'JZ', 'JNZ', 'JMP', 'OR', 'XOR', 'AND', 'NOT', 'ADD', 'SUB']}

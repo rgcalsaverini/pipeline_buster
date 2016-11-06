@@ -4,7 +4,8 @@
     var pannelElement = document.getElementById("pannel");
     var pipelineElement = document.getElementById("pipeline");
 
-    window.components.loadMachine(0, codeInputElement, pannelElement, pipelineElement);
+    window.components.loadMachine(window.selectedMachine, codeInputElement,
+      pannelElement, pipelineElement);
   };
 
   if(document.readyState === 'complete') {

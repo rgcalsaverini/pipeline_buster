@@ -1,5 +1,8 @@
 var React = require('react');
 var BoxPipe = require('./BoxPipe');
+var ALUPipe = require('./ALUPipe');
+var InputPipe = require('./InputPipe');
+var OutputPipe = require('./OutputPipe');
 
 module.exports = React.createClass({
   displayName: 'Pipeline',
@@ -25,6 +28,24 @@ module.exports = React.createClass({
           <BoxPipe key={i} name={stage.name} terminal={i == numStages - 1}/>
         );
       }
+
+      if(stage.img == 'alu'){
+        stages.push(
+          <ALUPipe key={i} name={stage.name} terminal={i == numStages - 1}/>
+        );
+      }
+
+      if(stage.img == 'input'){
+        stages.push(
+          <InputPipe key={i} name={stage.name} terminal={i == numStages - 1}/>
+        );
+      }
+
+      if(stage.img == 'output'){
+        stages.push(
+          <OutputPipe key={i} name={stage.name} terminal={i == numStages - 1}/>
+        );
+      }
     }
 
     console.log(stages);
@@ -44,6 +65,15 @@ module.exports = React.createClass({
         position: 'fixed',
         top: '15px',
         left: '15px',
+
+        display: '-webkit-flex',
+        display: 'flex',
+        WebkitFlexDirection: 'row',
+        flexDirection: 'row',
+        WebkitAlignItems: 'center',
+        alignItems: 'center',
+        WebkitJustifyContent: 'center',
+        justifyContent: 'center',
       },
 
     };

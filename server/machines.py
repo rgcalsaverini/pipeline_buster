@@ -1,12 +1,97 @@
-from server.instructions import basic, opcodes
+from server import instructions
 from random import randint
 
 
 machines = {
     0: {
-        'name': 'Basic Non-Pipelined',
+        'name': '1 - Stacker',
         'status': 'desligado',
-        'opcodes': opcodes,
+        'opcodes': instructions.barebones,
+        'code':{
+            'limit': 5,
+            'contents': [],
+        },
+        'stack': {
+            'limit': 4,
+            'contents': [],
+        },
+        'memory': {
+            'limit': 0,
+            'contents': [randint(-255, 255) for _ in range(0)],
+        },
+        'gprs': ['A'],
+        'registers': {},
+        'returnRegister': 'A',
+        'cycle': 1000,
+        'pipeline': [
+            {
+                'img': 'input',
+                'name': 'Fetch',
+                'operations': ['ins_fetch', 'decode', 'execute', 'mem', 'write'],
+            },
+            {
+                'img': 'alu',
+                'name': 'Exec',
+                'operations': [],
+            },
+            {
+                'img': 'output',
+                'name': 'Write',
+                'operations': [],
+            },
+        ],
+        'halt': False,
+    },
+
+    1: {
+        'name': '2 - Bad memory',
+        'status': 'desligado',
+        'opcodes': instructions.basic,
+        'code':{
+            'limit': 9,
+            'contents': [],
+        },
+        'stack': {
+            'limit': 8,
+            'contents': [],
+        },
+        'memory': {
+            'limit': 64,
+            'contents': [randint(-255, 255) for _ in range(64)],
+        },
+        'gprs': ['A', 'B'],
+        'registers': {},
+        'returnRegister': 'A',
+        'cycle': 1000,
+        'pipeline': [
+            {
+                'img': 'input',
+                'name': 'Fetch',
+                'operations': ['ins_fetch', 'decode', 'execute', 'mem', 'write'],
+            },
+            {
+                'img': 'box',
+                'name': 'Decode',
+                'operations': [],
+            },
+            {
+                'img': 'alu',
+                'name': 'Exec',
+                'operations': [],
+            },
+            {
+                'img': 'output',
+                'name': 'Write',
+                'operations': [],
+            },
+        ],
+        'halt': False,
+    },
+
+    2: {
+        'name': '3 - No jumping!',
+        'status': 'desligado',
+        'opcodes': instructions.opcodes,
         'code':{
             'limit': 20,
             'contents': [],
@@ -16,8 +101,8 @@ machines = {
             'contents': [],
         },
         'memory': {
-            'limit': 256,
-            'contents': [randint(-255, 255) for _ in range(256)],
+            'limit': 128,
+            'contents': [randint(-255, 255) for _ in range(64)],
         },
         'gprs': ['A', 'B', 'C'],
         'registers': {},
@@ -25,28 +110,28 @@ machines = {
         'cycle': 1000,
         'pipeline': [
             {
-                'img': 'box',
-                'text': 'Fetch',
+                'img': 'input',
+                'name': 'Fetch',
                 'operations': ['ins_fetch', 'decode', 'execute', 'mem', 'write'],
             },
             {
                 'img': 'box',
-                'text': 'Decode',
+                'name': 'Decode',
                 'operations': [],
             },
             {
                 'img': 'alu',
-                'text': 'Exec',
+                'name': 'Exec',
                 'operations': [],
             },
             {
                 'img': 'box',
-                'text': 'Mem',
+                'name': 'Memory',
                 'operations': [],
             },
             {
-                'img': 'box',
-                'text': 'Write',
+                'img': 'output',
+                'name': 'Write',
                 'operations': [],
             },
         ],
