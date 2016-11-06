@@ -7,6 +7,9 @@ import json
 def play(machine):
     return render_template('/play.html', machine=machine, debug=True)
 
+def opening():
+    return render_template('/opening.html', debug=True)
+
 def machine(id):
     if id not in machines.keys():
         abort(404)

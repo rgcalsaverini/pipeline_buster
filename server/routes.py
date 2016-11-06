@@ -1,9 +1,10 @@
 from server import views, app
 
 routes = [
-    ('/play/<int:machine>',                   views.play,           ['GET']),
-    # ('/machine',            views.list_machines,  ['GET']),
-    ('/machine/<int:id>',   views.machine,  ['GET']),
+    ('/', views.opening, ['GET']),
+    ('/play/<int:machine>', views.play, ['GET']),
+    # ('/machine', views.list_machines,  ['GET']),
+    ('/machine/<int:id>', views.machine, ['GET']),
 ]
 
 def add_routes():

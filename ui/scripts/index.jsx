@@ -4,6 +4,7 @@ var CodeInput = require('../components/CodeInput');
 var Pannel = require('../components/Pannel');
 var Pipeline = require('../components/Pipeline');
 var Announcment = require('../components/Announcment');
+var Opening = require('../components/Opening');
 var request = require('../utils/request.js');
 var merge = require('../utils/merge.js');
 var MachineSim = require('../interpreter/machine.js');
@@ -17,6 +18,13 @@ var ReactComponents = (function () {
   var _pipeline_el;
   var _info_el;
   var _stopCallback;
+
+  var loadOpening = function(el){
+    ReactDOM.render(
+      <Opening/>,
+        el
+      );
+  };
 
   var _initCodeInput = function(el, opcodes, registers, limitLines, locked, highlight, error) {
     ReactDOM.render(
@@ -162,6 +170,7 @@ var ReactComponents = (function () {
   };
 
   return {
+    loadOpening: loadOpening,
     loadMachine: loadMachine,
     manageInformation: manageInformation,
     messageMachine: messageMachine,
